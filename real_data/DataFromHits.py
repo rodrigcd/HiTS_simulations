@@ -3,6 +3,7 @@ from astropy.io import fits as pf
 import pickle
 from numpy.linalg import norm
 from os import listdir, walk
+import os
 import glob
 from os.path import isfile, join, isdir
 import matplotlib.pyplot as plt
@@ -21,15 +22,21 @@ class HiTSData(object):
     CCDs_list = [x for x in next(walk(CCDs_directory))[1]]
     CCDs_fits_list = list()
     CCDs_base_list = list()
+    CCDs_diff_list = list()
+    psf_list = list()
     for CCD in CCDs_list:
         fits_directory = CCDs_directory + CCD + '/' + target_image + '/'
+        diff_directory = CCDs_directory + CCD + '/diff/'
         base_directory = CCDs_directory + CCD + '/base/'
+        psf_directory = CCDs_directory + CCD + "psf"
         #ccds list of fits files
         #print(fits_directory+"*.fits")
         CCDs_fits_list.append(sorted(glob.glob(fits_directory+"*.fits"), key=str.lower))
+        CCDs_diff_list.append(sorted(glob.glob(diff_directory+"*.fits"), key=str.lower))
+        CCDs_diff_list.append(sorted(glob.glob(diff_directory + "*.fits"), key=str.lower))
         #CCDs_fits_list.append(sorted([fits_directory + f for f in listdir(fits_directory) if isfile(join(fits_directory, f))], key = str.lower))
         #base image of each ccd
-        print(glob.glob(base_directory+"*.fits"))
+        #print(glob.glob(base_directory+"*.fits"))
         CCDs_base_list.append(glob.glob(base_directory+"*.fits"))
         #asdasd
         #CCDs_base_list.append([base_directory + f for f in listdir(base_directory) if isfile(join(base_directory, f))])
@@ -96,7 +103,7 @@ class HiTSData(object):
                         continue
                     self.sn_info.append(sn_dict)
 
-        def add_objects(sn_dict, fits_list, half_image):
+        def add_objects(sn_dict, fits_list, diff_list, psf_list):
             stamps = []
             mjd_obs = []
             sky_brigtness = []
@@ -110,6 +117,8 @@ class HiTSData(object):
             read_noise = []
             saturation_value = []
             headers_dict = {}
+            diff_stamps = []
+            psfs = []
 
             print(sn_dict)
             #x_limits = [sn_dict["pos"][0] - int(half_image[1]), sn_dict["pos"][0] + int(half_image[1]) + 1]
@@ -124,7 +133,7 @@ class HiTSData(object):
                 fits_file = hdulist[0]
 
                 mjd_obs.append(fits_file.header["MJD-OBS"])
-                sky_brigtness.append(fits_file.header["SKYBRITE"])
+                #sky_brigtness.append(fits_file.header["SKYBRITE"])
                 sky_sigma.append(fits_file.header["SKYSIGMA"])
                 airmass.append(fits_file.header["AIRMASS"])
                 CCD_num.append(fits_file.header["CCDNUM"])
@@ -135,80 +144,96 @@ class HiTSData(object):
                 read_noise.append(fits_file.header["RDNOISEA"])
                 saturation_value.append(fits_file.header["SATURATA"])
 
-                epoch_image = np.reshape(fits_file.data, (fits_file.data.shape[0],fits_file.data.shape[1],1))
-                #print(epoch_image.shape)
+                epoch_image = fits_file.data
+
+                aux_mean, aux_std = np.mean(epoch_image), np.std(epoch_image)
+                n_iter = 1
+                valid_range = epoch_image
+                for j in range(n_iter):
+                    valid_range = valid_range[valid_range > (aux_mean-3*aux_std)]
+                    valid_range = valid_range[valid_range < (aux_mean+3*aux_std)]
+
+                sky_brigtness.append(np.mean(valid_range))
+
+
+                #print(sky_brigtness[-1])
+
+                #os.system("ds9 "+fits)
                 #asdasd
-                stamp = epoch_image[x_limits[0]:x_limits[1], y_limits[0]:y_limits[1], 0]
-                #print("blabla_"+str(stamp.shape))
-                stamps.append(np.reshape(stamp, (1, stamp.shape[0], stamp.shape[1], 1)))
+
+                stamp = epoch_image[x_limits[0]:x_limits[1], y_limits[0]:y_limits[1]]
+                stamps.append(stamp)
                 hdulist.close()
                 del hdulist[0].data
                 del fits_file
                 del epoch_image
-            stamps = np.concatenate(stamps, axis=3)[:,:,:,:self.n_epochs]
+
+            stamps = np.stack(stamps, axis=2)
             print(stamps.shape)
+            #asdasd
             #print(mjd_obs)
             #self.sn_sequences.append(stamp)
             #del epoch_images
 
-            headers_dict["obs_days"] = mjd_obs[:self.n_epochs]
-            headers_dict["sky_brightness"] = np.array(sky_brigtness)[:self.n_epochs]
-            headers_dict["sky_sigma"] = np.array(sky_sigma)[:self.n_epochs]
-            headers_dict["airmass"] = np.array(airmass)[:self.n_epochs]
-            headers_dict["ccd_num"] = np.array(CCD_num)[:self.n_epochs]
-            headers_dict["exp_time"] = np.array(exp_time)[:self.n_epochs]
-            headers_dict["gain"] = np.array(gain)[:self.n_epochs]
-            headers_dict["seeing"] = np.array(seeing)[:self.n_epochs]
-            headers_dict["pixel_scale"] = np.array(pixel_scale)[:self.n_epochs]
-            headers_dict["read_noise"] = np.array(read_noise)[:self.n_epochs]
-            headers_dict["saturation"] = np.array(saturation_value)[:self.n_epochs]
+            headers_dict["obs_days"] = np.array(mjd_obs)
+            headers_dict["sky_brightness"] = np.array(sky_brigtness)
+            headers_dict["sky_sigma"] = np.array(sky_sigma)
+            headers_dict["airmass"] = np.array(airmass)
+            headers_dict["ccd_num"] = np.array(CCD_num)
+            headers_dict["exp_time"] = np.array(exp_time)
+            headers_dict["gain"] = np.array(gain)
+            headers_dict["seeing"] = np.array(seeing)
+            headers_dict["pixel_scale"] = np.array(pixel_scale)
+            headers_dict["read_noise"] = np.array(read_noise)
+            headers_dict["saturation"] = np.array(saturation_value)
 
-            return stamps, headers_dict
+            for i, fits in enumerate(diff_list):
+                hdu_diff = pf.open(diff_list[i], memmap=False)
+                diff_data = hdu_diff[0].data
+                diff_stamp = diff_data[x_limits[0]:x_limits[1], y_limits[0]:y_limits[1]]
+                diff_stamps.append(diff_stamp)
+                hdu_diff.close()
+                del hdu_diff[0].data
+                del hdu_diff
+                del diff_data
+            diff_stamps = np.stack(diff_stamps, axis=2)
+            print(diff_stamps.shape)
+
+            for i, psf_file in enumerate(psf_list):
+                psf = np.load(psf_file)
+                psfs.append(psf)
+            psfs = np.stack(psfs, axis=2)
+            print(psfs.shape)
+
+            return stamps, diff_stamps, headers_dict, psfs
 
         load_sn_coordinates()
-        self.sn_sequences = []
-        self.headers = {}
-        self.sn_id = []
+        self.sn_data = {}
         not_found = []
         for sn_dict in self.sn_info:
             #try:
             fits_directory = self.CCDs_directory + sn_dict["id"] + '/' + self.target_image + '/'
             base_directory = self.CCDs_directory + sn_dict["id"] + '/base/'
+            diff_directory = self.CCDs_directory + sn_dict["id"] + '/diff/'
+            psf_directory = self.CCDs_directory + sn_dict["id"] + "/psf/"
             fits_list = []
             base_list = []
             print(sn_dict["id"])
             #try:
-            half_image = np.floor(self.image_size/2).astype(int)
-            #fits_list = [fits_directory + f for f in listdir(fits_directory) if isfile(join(fits_directory, f))]
+
             fits_list = glob.glob(fits_directory+"*.fits")
             fits_list = sorted(fits_list, key=str.lower)
-            #base_list = [base_directory + f for f in listdir(base_directory) if isfile(join(base_directory, f))]
-            glob.glob(base_directory + "*.fits")
+            base_list = glob.glob(base_directory + "*.fits")
             fits_list = base_list + fits_list
+            diff_list = sorted(glob.glob(diff_directory+"*.fits"))
+            psf_list = sorted(glob.glob(psf_directory+"*.npy"))
             print("n epochs: "+str(len(fits_list)))
-            stamp, headers = add_objects(sn_dict, fits_list, half_image)
-            self.sn_sequences.append(stamp)
-            self.headers[sn_dict["id"]] = headers
-            self.sn_id.append(sn_dict["id"])
-            # except:
-            #     print("SN: " + sn_dict["id"] + " not found")
-            #     not_found.append(sn_dict["id"])
-                #print(sys.exc_info()[0])
-            #print(self.sn_mjd_obs)
-        for stamp in self.sn_sequences:
-            print("sn_sequence stamps shape")
-            print(stamp.shape)
-        self.sn_sequences = np.concatenate(self.sn_sequences, axis=0)
+            stamp, diff_stamp, headers, psfs = add_objects(sn_dict, fits_list, diff_list, psf_list)
+            self.sn_data[sn_dict["id"]] = {"images": stamp, "diff": diff_stamp, "headers": headers, "psf": psfs}
 
-        self.sn_dict = {}
-        self.sn_dict['images'] = self.sn_sequences
-        #for mjd in self.sn_mjd_obs:
-        #    print(mjd.shape)
-        self.sn_dict['headers'] = self.headers#np.concatenate(self.sn_mjd_obs, axis=0)
-        self.sn_dict['id'] = self.sn_id
         #with open(self.CCDs_directory + 'sn_data.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
         with open('sn_data.pkl', 'wb') as f:
-            pickle.dump(self.sn_dict, f)
+            pickle.dump(self.sn_data, f)
 
     def supernovae_augmentation(self):
         self.sn_info = np.load(self.CCDs_directory + 'sn_data.pkl')
