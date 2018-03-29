@@ -92,7 +92,7 @@ class HiTSData(object):
         def load_sn_coordinates():
             self.sn_info = []
             exceptions = ["HiTS42SN", "HiTS66SN", "HiTS67SN"]
-            with open("ResultsTable2015.csv", 'r') as f_aux:
+            with open("./hits_tables/ResultsTable2015.csv", 'r') as f_aux:
                 for i in range(90):
                     sn_dict = {}
                     line = f_aux.readline().split(",")
@@ -143,6 +143,7 @@ class HiTSData(object):
                 pixel_scale.append(fits_file.header["PIXSCAL1"])
                 read_noise.append(fits_file.header["RDNOISEA"])
                 saturation_value.append(fits_file.header["SATURATA"])
+                print(fits_file.header["FILTER"])
 
                 epoch_image = fits_file.data
 
@@ -175,12 +176,12 @@ class HiTSData(object):
             #self.sn_sequences.append(stamp)
             #del epoch_images
 
-            headers_dict["obs_days"] = np.array(mjd_obs)
+            headers_dict["obs_days"] = np.sort(np.array(mjd_obs).astype(np.float))
             headers_dict["sky_brightness"] = np.array(sky_brigtness)
             headers_dict["sky_sigma"] = np.array(sky_sigma)
-            headers_dict["airmass"] = np.array(airmass)
+            headers_dict["airmass"] = np.array(airmass).astype(np.float)
             headers_dict["ccd_num"] = np.array(CCD_num)
-            headers_dict["exp_time"] = np.array(exp_time)
+            headers_dict["exp_time"] = np.array(exp_time).astype(np.float)
             headers_dict["gain"] = np.array(gain)
             headers_dict["seeing"] = np.array(seeing)
             headers_dict["pixel_scale"] = np.array(pixel_scale)
