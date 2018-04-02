@@ -11,6 +11,7 @@ class ObsConditions(object):
         self.ccd_parameters_keys = kwargs["ccd_parameters_keys"]
         self.zero_points_path = kwargs["zero_point_path"]
         self.obs_conditions_keys = kwargs["obs_conditions_keys"]
+        self.surveysim_data_path = kwargs["surveysim_data_path"]
         self.fixed_seed = 123
         self.sn_data = np.load(self.data_path)
         self.get_zero_points()
@@ -55,28 +56,54 @@ class ObsConditions(object):
     def generate_obs_conditions(self):
         obs_conditions = []
         sn_keys = list(self.sn_data.keys())
+        self.unique_obs_days = []
         for key in sn_keys:
             aux_dict = {}
             for obs_key in self.obs_conditions_keys:
                 aux_dict[obs_key] = self.sn_data[key]["headers"][obs_key][:self.sequence_length]
             aux_dict["psf"] = self.sn_data[key]["psf"][..., :self.sequence_length]
+            self.unique_obs_days.append(self.sn_data[key]["headers"]["obs_days"][:self.sequence_length])
             obs_conditions.append(aux_dict)
         self.obs_cond = obs_conditions
+        self.unique_obs_days = np.unique(np.concatenate(self.unique_obs_days, axis=0))
+        #print(len(self.unique_obs_days), self.unique_obs_days.shape)
+        #print(self.unique_obs_days)
+
+    def mask_obs_cond(self):
+        return
 
     def save_data(self):
         aux_dict = {"camera_params": self.ccd_params, "obs_conditions": self.obs_cond}
         with open('camera_and_obs_cond.pkl', 'wb') as f:
             pickle.dump(aux_dict, f)
 
+    def surveysim_data(self, band="g"):
+
+        aux_file = open(self.surveysim_data_path+"SN_HiTS.dat", "w")
+        aux_file.write("MJD FILTER\n")
+        for day in self.unique_obs_days:
+            aux_file.write(str(day)+" "+band+"\n")
+        aux_file.close()
+        #for i, obs_cond in enumerate(self.obs_cond):
+        #    aux_file = open(self.surveysim_data_path+"hits_obsplan_"+str(i).zfill(2)+".dat", "w")
+        #    aux_file.write("MJD FILTER\n")
+        #    for day in obs_cond["obs_days"]:
+        #        aux_file.write(str(day)+" "+band+"\n")
+        #    aux_file.close()
+
 
 if __name__ == "__main__":
 
     ccd_parameters_keys = ["ccd_num", "gain", "read_noise", "saturation"]
-    obs_conditions_keys = ["sky_brightness", "airmass", "exp_time"]
+    obs_conditions_keys = ["sky_brightness", "airmass", "exp_time", "obs_days"]
     zero_points_path = "./hits_tables/"
+    surveysim_data_path = "/home/rodrigo/supernovae_detection/surveysim/obsplans/"
 
     obs_conditions = ObsConditions(sequence_length=25,
                                    sn_data_path="sn_data.pkl",
                                    ccd_parameters_keys=ccd_parameters_keys,
                                    zero_point_path=zero_points_path,
-                                   obs_conditions_keys=obs_conditions_keys)
+                                   obs_conditions_keys=obs_conditions_keys,
+                                   surveysim_data_path=surveysim_data_path)
+
+    obs_conditions.surveysim_data()
