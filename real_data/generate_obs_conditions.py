@@ -12,12 +12,19 @@ class ObsConditions(object):
         self.zero_points_path = kwargs["zero_point_path"]
         self.obs_conditions_keys = kwargs["obs_conditions_keys"]
         self.surveysim_data_path = kwargs["surveysim_data_path"]
+        self.per_field_epoch = kwargs["per_field_epoch"]
+        self.field_cond_path = kwargs["field_cond_path"]
+        self.npy_keys = kwargs["npy_keys"]
         self.fixed_seed = 123
         self.sn_data = np.load(self.data_path)
         self.get_zero_points()
         self.match_ccds()
-        self.generate_obs_conditions()
-        self.save_data()
+        if not per_field_epoch:
+            self.generate_obs_conditions()
+            self.save_data()
+        else:
+            self.read_fields()
+            self.surveysim_data()
 
     def get_zero_points(self):
         zp_list = glob.glob(self.zero_points_path+"psm*")
@@ -69,41 +76,68 @@ class ObsConditions(object):
         #print(len(self.unique_obs_days), self.unique_obs_days.shape)
         #print(self.unique_obs_days)
 
-    def mask_obs_cond(self):
-        return
+    def read_fields(self):
+        info_list = sorted(glob.glob(self.field_cond_path+"*.npy"), key=str.lower)
+        self.obs_cond = {}
+        for info in info_list:
+            field, epoch = np.array(info.split("_")[2:4]).astype(np.int)
+            info_array = np.load(info)
+            aux_dict = {}
+            for i, key in enumerate(self.npy_keys):
+                if key == "FILTER":
+                    aux_dict[self.obs_conditions_keys[i]] = str(info_array[key])[2]
+                else:
+                    aux_dict[self.obs_conditions_keys[i]] = np.float(info_array[key])
+            print(aux_dict)
+            if epoch == 1:
+                self.obs_cond["Field"+str(field).zfill(2)] = [aux_dict, ]
+            else:
+                self.obs_cond["Field"+str(field).zfill(2)].append(aux_dict)
 
     def save_data(self):
         aux_dict = {"camera_params": self.ccd_params, "obs_conditions": self.obs_cond}
         with open('camera_and_obs_cond.pkl', 'wb') as f:
             pickle.dump(aux_dict, f)
 
-    def surveysim_data(self, band="g"):
+    def surveysim_data(self):
 
-        aux_file = open(self.surveysim_data_path+"SN_HiTS.dat", "w")
-        aux_file.write("MJD FILTER\n")
-        for day in self.unique_obs_days:
-            aux_file.write(str(day)+" "+band+"\n")
-        aux_file.close()
-        #for i, obs_cond in enumerate(self.obs_cond):
-        #    aux_file = open(self.surveysim_data_path+"hits_obsplan_"+str(i).zfill(2)+".dat", "w")
-        #    aux_file.write("MJD FILTER\n")
-        #    for day in obs_cond["obs_days"]:
-        #        aux_file.write(str(day)+" "+band+"\n")
-        #    aux_file.close()
+        #aux_file = open(self.surveysim_data_path+"SN_HiTS.dat", "w")
+        #aux_file.write("MJD FILTER EXPTIME AIRMASS\n")
+        #for day in self.unique_obs_days:
+        #    aux_file.write(str(day)+" "+band+"\n")
+        #aux_file.close()
+        for field, epoch_list in self.obs_cond.items():
+            print(field)
+            aux_file = open(self.surveysim_data_path+"HiTS_fields/"+field+".dat", "w")
+            aux_file.write("MJD FILTER EXPTIME AIRMASS EPOCH\n")
+            for epoch in epoch_list:
+                day = epoch["obs_days"]
+                exp_time = epoch["exp_time"]
+                airmass = epoch["airmass"]
+                aux_epoch = epoch["epoch"]
+                line = str(day)+" "+epoch["filter"]+" "+str(exp_time)+" "+str(airmass)+" "+str(aux_epoch)
+                aux_file.write(line+"\n")
+            aux_file.close()
 
 
 if __name__ == "__main__":
 
     ccd_parameters_keys = ["ccd_num", "gain", "read_noise", "saturation"]
-    obs_conditions_keys = ["sky_brightness", "airmass", "exp_time", "obs_days"]
-    zero_points_path = "./hits_tables/"
+    obs_conditions_keys = ["sky_brightness", "airmass", "exp_time", "obs_days", "filter", "seeing", "epoch", "limmag"]
+    npy_keys = ["BACK_LEVEL", "AIRMASS", "EXP_TIME", "MJD", "FILTER", "SEEING", "EPOCH", "LIMIT_MAG_EA5"]
+    zero_points_path = "./HiTS_tables/"
+    fields_cond_path = "./Blind15A_info/"
     surveysim_data_path = "/home/rodrigo/supernovae_detection/surveysim/obsplans/"
+    per_field_epoch = True
 
     obs_conditions = ObsConditions(sequence_length=25,
                                    sn_data_path="sn_data.pkl",
                                    ccd_parameters_keys=ccd_parameters_keys,
                                    zero_point_path=zero_points_path,
                                    obs_conditions_keys=obs_conditions_keys,
-                                   surveysim_data_path=surveysim_data_path)
+                                   npy_keys=npy_keys,
+                                   surveysim_data_path=surveysim_data_path,
+                                   per_field_epoch=per_field_epoch,
+                                   field_cond_path=fields_cond_path)
 
-    obs_conditions.surveysim_data()
+    # obs_conditions.surveysim_data()
