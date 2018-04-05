@@ -24,6 +24,7 @@ class ObsConditions(object):
             self.save_data()
         else:
             self.read_fields()
+            self.save_data()
             self.surveysim_data()
 
     def get_zero_points(self):
@@ -83,12 +84,19 @@ class ObsConditions(object):
             field, epoch = np.array(info.split("_")[2:4]).astype(np.int)
             info_array = np.load(info)
             aux_dict = {}
+            #print(field, epoch)
             for i, key in enumerate(self.npy_keys):
-                if key == "FILTER":
-                    aux_dict[self.obs_conditions_keys[i]] = str(info_array[key])[2]
-                else:
-                    aux_dict[self.obs_conditions_keys[i]] = np.float(info_array[key])
-            print(aux_dict)
+                try:
+                    if key == "FILTER":
+                        aux_dict[self.obs_conditions_keys[i]] = str(info_array[key])[2]
+                    else:
+                        aux_dict[self.obs_conditions_keys[i]] = np.float(info_array[key])
+                except:
+                    aux_dict[self.obs_conditions_keys[i]] = \
+                        self.obs_cond["Field"+str(field).zfill(2)][-1][self.obs_conditions_keys[i]]
+                    print("field "+str(field)+", epoch "+str(epoch))
+                    print("does not have key "+key+", replacing with previous value "+str(aux_dict[self.obs_conditions_keys[i]]))
+
             if epoch == 1:
                 self.obs_cond["Field"+str(field).zfill(2)] = [aux_dict, ]
             else:
@@ -107,24 +115,30 @@ class ObsConditions(object):
         #    aux_file.write(str(day)+" "+band+"\n")
         #aux_file.close()
         for field, epoch_list in self.obs_cond.items():
-            print(field)
+            #print(field)
             aux_file = open(self.surveysim_data_path+"HiTS_fields/"+field+".dat", "w")
             aux_file.write("MJD FILTER EXPTIME AIRMASS EPOCH\n")
+            n_g = 0
             for epoch in epoch_list:
                 day = epoch["obs_days"]
                 exp_time = epoch["exp_time"]
                 airmass = epoch["airmass"]
                 aux_epoch = epoch["epoch"]
+                if epoch["filter"] == "g":
+                    n_g += 1
                 line = str(day)+" "+epoch["filter"]+" "+str(exp_time)+" "+str(airmass)+" "+str(aux_epoch)
                 aux_file.write(line+"\n")
+            print(n_g)
             aux_file.close()
 
 
 if __name__ == "__main__":
 
     ccd_parameters_keys = ["ccd_num", "gain", "read_noise", "saturation"]
-    obs_conditions_keys = ["sky_brightness", "airmass", "exp_time", "obs_days", "filter", "seeing", "epoch", "limmag"]
-    npy_keys = ["BACK_LEVEL", "AIRMASS", "EXP_TIME", "MJD", "FILTER", "SEEING", "EPOCH", "LIMIT_MAG_EA5"]
+    obs_conditions_keys = ["sky_brightness", "airmass", "exp_time", "obs_days",
+                           "filter", "seeing", "epoch", "limmag5", "limmag3", "zero_point"]
+    npy_keys = ["BACK_LEVEL", "AIRMASS", "EXP_TIME", "MJD", "FILTER", "SEEING", "EPOCH",
+                "LIMIT_MAG_EA5", "LIMIT_MAG_EA3", "ZP_PS"]
     zero_points_path = "./HiTS_tables/"
     fields_cond_path = "./Blind15A_info/"
     surveysim_data_path = "/home/rodrigo/supernovae_detection/surveysim/obsplans/"
