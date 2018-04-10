@@ -1,0 +1,9 @@
+HiTS_simulation code
+
+In order to generate images with this code, run the following:
+    
+    - python DataFromHits.py: It will read real supernovae images and get supernovae stamps sequence, observation conditions and camera parameters, generating a pickle file "sn_data.pkl"
+    sn_data.keys() = ["HiTS01SN", "HiTS02SN", ...]
+    sn_data["HiTS01SN"].keys() = ['images', 'diff', 'headers', 'psf']
+    sn_data["HiTS01SN"]["images"].shape = (21, 21, 26) = (x_size, y_size, epochs)
+    
