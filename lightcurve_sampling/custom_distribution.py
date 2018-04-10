@@ -61,11 +61,11 @@ class MagnitudeDistribution(object):
             log_n = log_n[trunc_index]
             trunc_bins = np.log(bins[trunc_index])
             self.coef_per_band[band] = np.polyfit(trunc_bins, log_n, deg=1)
-        with open('distr_coef.pkl', 'wb') as f:
+        with open('lc_data/distr_coef.pkl', 'wb') as f:
             pickle.dump(self.coef_per_band, f)
 
     def load_coef(self):
-        self.coef_per_band = np.load("distr_coef.pkl")
+        self.coef_per_band = np.load("lc_data/distr_coef.pkl")
 
     def sample(self, n_samples):
         samples = {}
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     plt.xlabel("Magnitude", fontsize=16)
     ax.set_ylabel("Normalized Frequency", fontsize=16)
     ax.legend(fontsize=16)
-    plt.savefig("custom_distr.png")
+    plt.savefig("images/custom_distr.png")
     plt.show()
 
 

@@ -37,7 +37,7 @@ class M33Cepheids(LightCurve):
         self.lc_gps = np.load(self.lc_path)
         self.av_bands = self.lc_gps["stats"][0].keys()
 
-    def generate_single_lc(self):
+    def generate_single_lc(self, obs_days):
         lc_id = randint(0, len(self.lc_gps["index"])-1)
         period = self.lc_gps["stats"][lc_id][self.av_bands[0]][2]
 
@@ -54,14 +54,16 @@ class M33Cepheids(LightCurve):
             mag[band] = lc*stats[band][1] + mag_values[band][0] #+ np.random.normal(loc=0, scale=np.sqrt(np.diag(cov)))*0.1
         return mag, period
 
-    def generate_lightcurves(self, n_lightcurves):
+    def generate_lightcurves(self, n_lightcurves,  obs_days=None):
+        if not obs_days:
+            obs_days = self.observation_days
         lightcurves = {}
         params = {}
         lightcurves = {}
         lightcurves_list = []
         for i in range(n_lightcurves):
             # print(i)
-            lightcurves_list.append(self.generate_single_lc())
+            lightcurves_list.append(self.generate_single_lc(obs_days=obs_days))
         for band in self.bands:
             lightcurves[band] = []
             params[band] = []

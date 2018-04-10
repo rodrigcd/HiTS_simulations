@@ -28,19 +28,19 @@ python generate_obs_conditions.py # Generate camera and obs condition file using
 camera_obs_cond.keys() = ['camera_params', 'obs_conditions']
 
 # Camera
-type(camera_obs_cond["camera_params"]) =  list
-camera_obs_cond["camera_params"][0] = {'ccd_num': 1,
- 				       'gain': 4.039,
-				       'read_noise': 6.13928,
-	                               'saturation': 38652.0,
-	                               'zp_g': 25.380079,
-	                               'zp_i': 25.313714,
-	                               'zp_r': 25.439446,
-	                               'zp_u': 23.548788}
+camera_obs_cond["camera_params"].keys() = ['CCD25', 'CCD52', 'CCD86', 'CCD54', ...]
+camera_obs_cond["camera_params"]["CCD25"] = {'ccd_num': 25,
+ 					     'gain': 4.104,
+ 					     'read_noise': 6.119064,
+ 					     'saturation': 40469.0,
+ 					     'zp_g': 25.399156,
+ 					     'zp_i': 25.313254,
+ 					     'zp_r': 25.474396,
+ 					     'zp_u': 23.546145}
 
 # Obs conditions per field
 camera_obs_cond["obs_conditions"].keys() = ['Field01', 'Field02', 'Field04', ...]
-type(camera_obs_cond["obs_conditions"]["Field01"]) = list
+type(camera_obs_cond["obs_conditions"]["Field01"]) = list # one element per epoch
 camera_obs_cond["obs_conditions"]["Field01"][0] = {'airmass': 1.6,
   						   'epoch': 1.0,
   						   'exp_time': 86.0,
