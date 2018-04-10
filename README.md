@@ -12,11 +12,14 @@ The code is currently divided in three steps. Get the observation plan, observat
 Getting real data from HiTS images. This part is not needed if you build your own camera and obs condition file. The data is not in this repository.
 
 ```
-python DataFromHits.py # It will read real supernovae images and get supernovae stamps sequence, observation conditions and camera parameters, generating a pickle file "sn_data.pkl"
+# It will read real supernovae images and get supernovae stamps sequence observation 
+# conditions and camera parameters, generating a pickle file "sn_data.pkl"
+python DataFromHits.py 
 sn_data.keys() = ["HiTS01SN", "HiTS02SN", ...]
 sn_data["HiTS01SN"].keys() = ['images', 'diff', 'headers', 'psf']
 sn_data["HiTS01SN"]["images"].shape = (21, 21, 26) = (x_size, y_size, epochs) # Same format for 'diff' and 'psf'
-sn_data["HiTS01SN"]["headers"].keys() = ['obs_days', 'sky_brightness', 'sky_sigma', 'airmass', 'ccd_num', 'exp_time', 'gain', 'seeing', 'pixel_scale', 'read_noise', 'saturation']
+sn_data["HiTS01SN"]["headers"].keys() = ['obs_days', 'sky_brightness', 'sky_sigma', 'airmass', 'ccd_num', 
+                                         'exp_time', 'gain', 'seeing', 'pixel_scale', 'read_noise', 'saturation']
 ```
 The final product of this part is camera_and_obs_cond.pkl, you could build your oun observation plan using a different survey as long as you keep the format of this file. In this case we do the following:
 
