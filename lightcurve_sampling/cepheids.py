@@ -11,7 +11,7 @@ class Cepheids(LightCurve):
         self.lc_path = kwargs["cepheids_path"]
 
     def generate_lightcurves(self, n_lightcurves, re_sampled=True):
-        data = np.load(self.lc_path)
+        data = np.load(self.lc_path, encoding="latin1")
         mag_samples = self.mag_generator.sample(n_lightcurves)
         lightcurves = {}
         params = {}
@@ -34,8 +34,8 @@ class M33Cepheids(LightCurve):
     def __init__(self, **kwargs):
         super(M33Cepheids, self).__init__(**kwargs)
         self.lc_path = kwargs["M33_cepheids_path"]
-        self.lc_gps = np.load(self.lc_path)
-        self.av_bands = self.lc_gps["stats"][0].keys()
+        self.lc_gps = np.load(self.lc_path, encoding="latin1")
+        self.av_bands = list(self.lc_gps["stats"][0].keys())
 
     def generate_single_lc(self, obs_days):
         lc_id = randint(0, len(self.lc_gps["index"])-1)
@@ -47,16 +47,22 @@ class M33Cepheids(LightCurve):
         mag_values = self.mag_generator.sample(1)
         mag = {}
         for band in self.bands:
+            if len(obs_days[band]) == 0:
+                mag[band] = np.array([])
+                #period = np.array([])
+                continue
             if not (band in self.av_bands):
                 raise ValueError('M33 survey does not have '+band+' band')
-            phase = np.mod(self.observation_days[band]+np.random.random_sample(), period)*(1.0/period)
+            phase = np.mod(obs_days[band]+np.random.random_sample(), period)*(1.0/period)
             lc = gp[band].predict(X=phase[:, np.newaxis])#, return_cov=True)#, n_samples=1, random_state=randint(0, 10000))
             mag[band] = lc*stats[band][1] + mag_values[band][0] #+ np.random.normal(loc=0, scale=np.sqrt(np.diag(cov)))*0.1
         return mag, period
 
-    def generate_lightcurves(self, n_lightcurves,  obs_days=None):
+    def generate_lightcurves(self, n_lightcurves,  obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        if distr_limits:
+            self.mag_generator.set_extrapolation_limits(distr_limits)
         lightcurves = {}
         params = {}
         lightcurves = {}

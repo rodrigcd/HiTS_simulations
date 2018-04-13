@@ -67,6 +67,9 @@ class MagnitudeDistribution(object):
     def load_coef(self):
         self.coef_per_band = np.load("lc_data/distr_coef.pkl")
 
+    def set_extrapolation_limits(self, limits):
+        self.extrapolation_limit = limits
+
     def sample(self, n_samples):
         samples = {}
         for band in self.bands:
@@ -93,7 +96,8 @@ if __name__ == "__main__":
     bands = ["g", "r", "i", "z"]
     extend_fit = 0
     load_distribution = True
-    extrapolation_limits = {'g': [12, 25.602089154033994], 'r': [12, 25.029324900291915], 'i': [12, 24.45150161567846], 'z': [12, 23.122699702058064]}
+    extrapolation_limits = {'g': [20, 25.602089154033994], 'r': [20, 25.029324900291915],
+                            'i': [20, 24.45150161567846], 'z': [20, 23.122699702058064]}
 
     # fit_limits = {"z": [17.5, 20+extend_fit],
     #               "u": [16, 21+extend_fit],
@@ -107,9 +111,13 @@ if __name__ == "__main__":
                                                 bands=bands,
                                                 load_distr=load_distribution)
 
+    print(extrapolation_limits)
+    print(object_distribution.extrapolation_limit)
+
     bins = np.linspace(12, 30, 200)
     coefs = object_distribution.coef_per_band
     samples = object_distribution.sample(n_samples=10000)
+    print(type(samples))
     mpl.style.use("default")
     f, ax = plt.subplots(1, 1, figsize=(14, 7))
     # print(samples)

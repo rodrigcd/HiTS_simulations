@@ -10,7 +10,6 @@ from custom_distribution import MagnitudeDistribution
 import matplotlib as mpl
 warnings.filterwarnings("ignore")
 
-
 class LightCurve(object):
     """Light curve main class"""
     def __init__(self, **kwargs):
@@ -18,7 +17,7 @@ class LightCurve(object):
         self.mag_generator = MagnitudeDistribution(**kwargs)
         self.bands = kwargs["bands"]
 
-    def generate_lightcurves(self, n_lightcurves, obs_days=None):
+    def generate_lightcurves(self, n_lightcurves, obs_days=None, distr_limits=None):
         """Returns a dictionary with keys per band with a list of light curves
         and dictionary with parameters of each light curve"""
         pass
@@ -29,13 +28,19 @@ class Asteroids(LightCurve):
     def __init__(self, **kwargs):
         super(Asteroids, self).__init__(**kwargs)
 
-    def generate_lightcurves(self, n_lightcurves, obs_days=None):
+    def generate_lightcurves(self, n_lightcurves, obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        if distr_limits:
+            self.mag_generator.set_extrapolation_limits(distr_limits)
         lightcurves = {}
         mag_samples = self.mag_generator.sample(n_samples=n_lightcurves)
         time_samples = {}
         for band in self.bands:
+            if len(obs_days[band]) == 0:
+                mag_samples[band] = []
+                lightcurves[band] = np.array([])
+                continue
             time_samples[band] = np.random.randint(low=0, high=len(obs_days[band]))
             lightcurves[band] = np.ones(shape=(n_lightcurves, len(obs_days[band])))*40.0
             lightcurves[band][:, time_samples[band]] = mag_samples[band]
@@ -48,9 +53,11 @@ class Constant(LightCurve):
     def __init__(self,  mag_limit=25, **kwargs):
         super(Constant, self).__init__(**kwargs)
 
-    def generate_lightcurves(self, n_lightcurves, obs_days=None):
+    def generate_lightcurves(self, n_lightcurves, obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        if distr_limits:
+            self.mag_generator.set_extrapolation_limits(distr_limits)
         lightcurves = {}
         mag_samples = self.mag_generator.sample(n_samples=n_lightcurves)
         for band in self.bands:
@@ -70,7 +77,6 @@ class RRLyrae(LightCurve):
         self.rrlyrae = fetch_rrlyrae()
         self.std_values = pandas.read_csv("lc_data/RRLYR_HiTS_std.csv")["Std"].values
         silverman_sigma = np.std(self.std_values)*np.power((4.0/3.0/len(self.std_values)), (1.0/5.0))
-        print(silverman_sigma)
         self.kde_sampler = KernelDensity(kernel="gaussian", bandwidth=silverman_sigma).fit(self.std_values[..., np.newaxis])
 
     def generate_single_lc(self, obs_days):
@@ -84,12 +90,14 @@ class RRLyrae(LightCurve):
         mag = {}
         error = np.clip(self.kde_sampler.sample(n_samples=1)[0, 0], a_min=0.011, a_max=None)
         for band in self.bands:
-            mag[band] = gen.generated(band, obs_days[band], err=error)
+            mag[band] = gen.generated(band, obs_days[band]+np.random.random_sample(), err=error)
         return mag, period
 
-    def generate_lightcurves(self, n_lightcurves, re_sampled=True, obs_days=None):
+    def generate_lightcurves(self, n_lightcurves, re_sampled=True, obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        if distr_limits:
+            self.mag_generator.set_extrapolation_limits(distr_limits)
         lightcurves = {}
         params = {}
         lightcurves_list = []
@@ -107,6 +115,7 @@ class RRLyrae(LightCurve):
                 params[band].append(np.array([mag_samples[band][i], period]))
             lightcurves[band] = np.concatenate(lightcurves[band], axis=0)
             params[band] = params[band]
+            print("lightcurves type: "+str(type(lightcurves)))
         return lightcurves, params
 
 
@@ -127,14 +136,19 @@ class Supernovae(LightCurve):
         self.lc_path = kwargs["sn_lightcurves_path"]
         self.limmag = kwargs["limmag"]
         self.param_path = kwargs["sn_parameters_path"]
+        self.all_lightcurves = np.load(self.lc_path)
+        self.all_params = np.load(self.param_path)
 
-    def generate_lightcurves(self, n_lightcurves, obs_days=None):
+    def generate_lightcurves(self, n_lightcurves, obs_days=None, distr_limits=None, field="Field01", limmag=None):
         if not obs_days:
             obs_days = self.observation_days
+        if not limmag:
+            limmag = self.limmag
         filtered_lightcurves = {}
         parameters = {}
-        all_lightcurves_data = np.load(self.lc_path)
-        all_parameters_data = np.load(self.param_path)
+        all_lightcurves_data = self.all_lightcurves[field]
+        all_parameters_data = self.all_params[field]
+        available_bands = list(all_lightcurves_data[0].keys())
         for band in self.bands:
             filtered_lightcurves[band] = []
             parameters[band] = []
@@ -146,12 +160,18 @@ class Supernovae(LightCurve):
             current_lightcurve = lc
             detection_per_band = []
             for band in self.bands:
-                mag_diff = self.limmag[band] - current_lightcurve[band]
+                if not (band in available_bands):
+                    continue
+                mag_diff = limmag[band] - current_lightcurve[band]
                 valid_index = np.where(mag_diff > 0)[0]
                 detection_per_band.append(len(valid_index) > 0)
             if any(detection_per_band):
                 lc_count += 1
                 for band in self.bands:
+                    if not (band in available_bands):
+                        filtered_lightcurves[band].append([])
+                        parameters[band].append(np.array([]))
+                        continue
                     filtered_lightcurves[band].append(lc[band][np.newaxis, :])
                     if len(all_parameters_data.shape) >= 2:
                         parameters[band].append(all_parameters_data[..., i])
@@ -174,9 +194,11 @@ class EmptyLightCurve(LightCurve):
         super(EmptyLightCurve, self).__init__(**kwargs)
         self.mag = 50
 
-    def generate_lightcurves(self, n_lightcurves, obs_days=None):
+    def generate_lightcurves(self, n_lightcurves, obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        if distr_limits:
+            self.mag_generator.set_extrapolation_limits(distr_limits)
         params = {}
         lightcurves = {}
         for band in self.bands:
@@ -193,22 +215,94 @@ if __name__ == "__main__":
 
     cam_obs_cond = np.load("../real_obs/camera_and_obs_cond.pkl")
     obs_cond = cam_obs_cond["obs_conditions"]["Field01"]
+    print(obs_cond[0].keys())
     bands = ["g", "r", "i"]
     load_distribution = True
-    extrapolation_limits = {'g': [12, 25.602089154033994], 'r': [12, 25.029324900291915], 'i': [12, 24.45150161567846], 'z': [12, 23.122699702058064]}
+    shift_limit = -2
+    extrapolation_limits = {'g': [20, 25.602089154033994+shift_limit], 'r': [20, 25.029324900291915+shift_limit],
+                            'i': [20, 24.45150161567846+shift_limit], 'z': [20, 23.122699702058064+shift_limit]}
 
     obs_days = {"g": [], "r": [], "i": []}
+    limmag = {"g": [], "r": [], "i": []}
 
     for epoch in obs_cond:
-        obs_days[epoch["filter"]] = epoch["obs_day"]
+        obs_days[epoch["filter"]].append(epoch["obs_day"])
+        limmag[epoch["filter"]].append(epoch["limmag5"])
+
+    for band in bands:
+        obs_days[band] = np.array(obs_days[band])
+        limmag[band] = np.array(limmag[band])
+        ordered_index = np.argsort(obs_days[band])
+        obs_days[band] = obs_days[band][ordered_index]
+        limmag[band] = limmag[band][ordered_index]
+        print("average limit of magnitude band "+band)
+        print(np.mean(limmag[band]))
+
+
+    #print(obs_days)
+    #print(limmag)
 
     rrlyrae_gen = RRLyrae(observation_days=obs_days,
                           load_distr=load_distribution,
                           extrapolation_limit=extrapolation_limits,
                           bands=bands)
+    rrlyrae_lc, params = rrlyrae_gen.generate_lightcurves(10)
 
-    rrlyrae_gen.generate_lightcurves(100)
+    asteroids_gen = Asteroids(observation_days=obs_days,
+                                      load_distr=load_distribution,
+                                      extrapolation_limit=extrapolation_limits,
+                                      bands=bands)
+
+    asteroids_lc, params = asteroids_gen.generate_lightcurves(10, obs_days=obs_days, distr_limits=extrapolation_limits)
+
+    constant_gen = Constant(observation_days=obs_days,
+                          load_distr=load_distribution,
+                          extrapolation_limit=extrapolation_limits,
+                          bands=bands)
 
 
+    # extrapolation_limits = {'g': [23, 23.1], 'r': [20, 21],
+    #                         'i': [20, 21], 'z': [20, 21]}
+
+    constant_lc, params = constant_gen.generate_lightcurves(10, obs_days=obs_days, distr_limits=extrapolation_limits)
+
+    cepheids_gen = M33Cepheids(observation_days=obs_days,
+                               load_distr=load_distribution,
+                               extrapolation_limit=extrapolation_limits,
+                               bands=bands,
+                               M33_cepheids_path="./lc_data/cepheid_gps.pkl")
+
+    cepheids_lc, params = cepheids_gen.generate_lightcurves(10)
+
+    empty_gen = EmptyLightCurve(observation_days=obs_days,
+                               load_distr=load_distribution,
+                               extrapolation_limit=extrapolation_limits,
+                               bands=bands)
+
+    empty_lc, params = empty_gen.generate_lightcurves(10)
+
+    print(limmag.keys())
+
+    sn_gen = Supernovae(observation_days=obs_days,
+                        load_distr=load_distribution,
+                        extrapolation_limit=extrapolation_limits,
+                        bands=bands,
+                        limmag=limmag,
+                        sn_lightcurves_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcures.pkl",
+                        sn_parameters_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params.pkl")
+    sn_lc, params = sn_gen.generate_lightcurves(10)
+
+    plt.plot(obs_days["g"], rrlyrae_lc["g"][0, :], label="RRLyra")
+    plt.plot(obs_days["g"], asteroids_lc["g"][0, :], label="Asteroid")
+    plt.plot(obs_days["g"], constant_lc["g"][0, :], label="NonVariable")
+    plt.plot(obs_days["g"], cepheids_lc["g"][0, :], label="Cepheid")
+    plt.plot(obs_days["g"], sn_lc["g"][0, :], label="Supernovae")
+
+
+    plt.xlabel("obs day")
+    plt.ylabel("magnitude")
+    plt.ylim([27, 20])
+    plt.legend()
+    plt.show()
 
     print("wena")
