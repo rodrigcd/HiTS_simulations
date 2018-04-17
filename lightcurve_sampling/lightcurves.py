@@ -9,7 +9,7 @@ from sklearn.neighbors.kde import KernelDensity
 from custom_distribution import MagnitudeDistribution
 import matplotlib as mpl
 warnings.filterwarnings("ignore")
-plt.switch_backend('agg')
+#plt.switch_backend('agg')
 
 class LightCurve(object):
     """Light curve main class"""
@@ -49,10 +49,10 @@ class Asteroids(LightCurve):
         return lightcurves, mag_samples
 
 
-class Constant(LightCurve):
+class NonVariable(LightCurve):
     """Constant object light curve, params = magnitude"""
     def __init__(self,  mag_limit=25, **kwargs):
-        super(Constant, self).__init__(**kwargs)
+        super(NonVariable, self).__init__(**kwargs)
 
     def generate_lightcurves(self, n_lightcurves, obs_days=None, distr_limits=None):
         if not obs_days:
@@ -234,7 +234,7 @@ if __name__ == "__main__":
     extrapolation_limits = {'g': [19, 25.602089154033994+shift_limit], 'r': [19, 25.029324900291915+shift_limit],
                             'i': [19, 24.45150161567846+shift_limit], 'z': [19, 23.122699702058064+shift_limit]}
 
-    n_per_class = 5000
+    n_per_class = 500
 
     obs_days = {"g": [], "r": [], "i": []}
     limmag = {"g": [], "r": [], "i": []}
@@ -269,7 +269,7 @@ if __name__ == "__main__":
 
     asteroids_lc, ast_params = asteroids_gen.generate_lightcurves(n_per_class, obs_days=obs_days, distr_limits=extrapolation_limits)
 
-    constant_gen = Constant(observation_days=obs_days,
+    constant_gen = NonVariable(observation_days=obs_days,
                           load_distr=load_distribution,
                           extrapolation_limit=extrapolation_limits,
                           bands=bands)
@@ -296,14 +296,16 @@ if __name__ == "__main__":
     empty_lc, empty_params = empty_gen.generate_lightcurves(n_per_class)
 
     print(limmag.keys())
-
+    
+    # hits_lightcurves has 3000 light curves approx per field
     sn_gen = Supernovae(observation_days=obs_days,
                         load_distr=load_distribution,
                         extrapolation_limit=extrapolation_limits,
                         bands=bands,
                         limmag=limmag,
-                        sn_lightcurves_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcurves_field01.pkl",
-                        sn_parameters_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params_field01.pkl")
+                        sn_lightcurves_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcurves.pkl",
+                        sn_parameters_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params.pkl")
+   
     sn_lc, sn_params = sn_gen.generate_lightcurves(n_per_class)
     print(sn_lc["g"].shape)
 
@@ -319,6 +321,7 @@ if __name__ == "__main__":
     plt.ylabel("magnitude")
     plt.ylim([27, 20])
     plt.legend()
+    plt.savefig("images/examples.png")
     plt.show()
 
     for i in range(100):
@@ -327,6 +330,7 @@ if __name__ == "__main__":
     plt.xlabel("obs day")
     plt.ylabel("magnitude")
     plt.ylim([27, 20])
+    plt.savefig("images/supernovae_examples.png")
     plt.show()
 
     # Plot mag_distribution
@@ -345,8 +349,20 @@ if __name__ == "__main__":
     plt.plot(bins[1:], sn_h, label="SN")
     plt.plot(bins[1:], lim_h, label="limm")
     plt.legend()
+    plt.savefig("images/sampling_distr.png")
     #plt.xlim([30, 15])
     plt.show()
+
+    field_list = list(cam_obs_cond["obs_conditions"].keys())
+    for field in field_list:
+        cond = cam_obs_cond["obs_conditions"][field]
+        obs_days = []
+        limmag = []
+        for epoch in cond:
+            if epoch["filter"] == "g":
+                obs_days.append(epoch["obs_day"])
+                limmag.append(epoch["limmag5"])
+        print(field+" average limmag: "+str(np.mean(limmag)) + ", std: "+str(np.std(limmag)))
 
 
     print("wena")
