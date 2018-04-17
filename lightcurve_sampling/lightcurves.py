@@ -9,6 +9,7 @@ from sklearn.neighbors.kde import KernelDensity
 from custom_distribution import MagnitudeDistribution
 import matplotlib as mpl
 warnings.filterwarnings("ignore")
+plt.switch_backend('agg')
 
 class LightCurve(object):
     """Light curve main class"""
@@ -159,13 +160,23 @@ class Supernovae(LightCurve):
             lc = all_lightcurves_data[i]
             current_lightcurve = lc
             detection_per_band = []
-            for band in self.bands:
-                if not (band in available_bands):
-                    continue
-                mag_diff = limmag[band] - current_lightcurve[band]
-                valid_index = np.where(mag_diff > 0)[0]
-                detection_per_band.append(len(valid_index) > 0)
-            if any(detection_per_band):
+            exp_range_per_band = []
+            # for band in self.bands:
+            #     if not (band in available_bands):
+            #         continue
+            #     mag_diff = limmag[band] - current_lightcurve[band]
+            #     valid_index = np.where(mag_diff > 0)[0]
+            #     detection_per_band.append(len(valid_index) > 0)
+            #
+            # G DETECTION
+            mag_diff = limmag["g"] - current_lightcurve["g"]
+            valid_index = np.where(mag_diff > 0)[0]
+            detection_per_band.append(len(valid_index) > 0)
+
+            # Adding exp time
+            exp_diff = current_lightcurve["g"][0] - np.amin(current_lightcurve["g"])
+            exp_range_per_band.append(exp_diff > 1)
+            if any(detection_per_band) and any(exp_range_per_band):
                 lc_count += 1
                 for band in self.bands:
                     if not (band in available_bands):
@@ -214,13 +225,16 @@ from cepheids import *
 if __name__ == "__main__":
 
     cam_obs_cond = np.load("../real_obs/camera_and_obs_cond.pkl")
+    print("n available fields: "+str(len(list(cam_obs_cond["obs_conditions"].keys()))))
     obs_cond = cam_obs_cond["obs_conditions"]["Field01"]
     print(obs_cond[0].keys())
     bands = ["g", "r", "i"]
     load_distribution = True
-    shift_limit = -2
-    extrapolation_limits = {'g': [20, 25.602089154033994+shift_limit], 'r': [20, 25.029324900291915+shift_limit],
-                            'i': [20, 24.45150161567846+shift_limit], 'z': [20, 23.122699702058064+shift_limit]}
+    shift_limit = -1
+    extrapolation_limits = {'g': [19, 25.602089154033994+shift_limit], 'r': [19, 25.029324900291915+shift_limit],
+                            'i': [19, 24.45150161567846+shift_limit], 'z': [19, 23.122699702058064+shift_limit]}
+
+    n_per_class = 5000
 
     obs_days = {"g": [], "r": [], "i": []}
     limmag = {"g": [], "r": [], "i": []}
@@ -246,14 +260,14 @@ if __name__ == "__main__":
                           load_distr=load_distribution,
                           extrapolation_limit=extrapolation_limits,
                           bands=bands)
-    rrlyrae_lc, params = rrlyrae_gen.generate_lightcurves(10)
+    rrlyrae_lc, rr_params = rrlyrae_gen.generate_lightcurves(n_per_class)
 
     asteroids_gen = Asteroids(observation_days=obs_days,
                                       load_distr=load_distribution,
                                       extrapolation_limit=extrapolation_limits,
                                       bands=bands)
 
-    asteroids_lc, params = asteroids_gen.generate_lightcurves(10, obs_days=obs_days, distr_limits=extrapolation_limits)
+    asteroids_lc, ast_params = asteroids_gen.generate_lightcurves(n_per_class, obs_days=obs_days, distr_limits=extrapolation_limits)
 
     constant_gen = Constant(observation_days=obs_days,
                           load_distr=load_distribution,
@@ -264,7 +278,7 @@ if __name__ == "__main__":
     # extrapolation_limits = {'g': [23, 23.1], 'r': [20, 21],
     #                         'i': [20, 21], 'z': [20, 21]}
 
-    constant_lc, params = constant_gen.generate_lightcurves(10, obs_days=obs_days, distr_limits=extrapolation_limits)
+    constant_lc, const_params = constant_gen.generate_lightcurves(n_per_class, obs_days=obs_days, distr_limits=extrapolation_limits)
 
     cepheids_gen = M33Cepheids(observation_days=obs_days,
                                load_distr=load_distribution,
@@ -272,14 +286,14 @@ if __name__ == "__main__":
                                bands=bands,
                                M33_cepheids_path="./lc_data/cepheid_gps.pkl")
 
-    cepheids_lc, params = cepheids_gen.generate_lightcurves(10)
+    cepheids_lc, ceph_params = cepheids_gen.generate_lightcurves(n_per_class)
 
     empty_gen = EmptyLightCurve(observation_days=obs_days,
                                load_distr=load_distribution,
                                extrapolation_limit=extrapolation_limits,
                                bands=bands)
 
-    empty_lc, params = empty_gen.generate_lightcurves(10)
+    empty_lc, empty_params = empty_gen.generate_lightcurves(n_per_class)
 
     print(limmag.keys())
 
@@ -288,15 +302,17 @@ if __name__ == "__main__":
                         extrapolation_limit=extrapolation_limits,
                         bands=bands,
                         limmag=limmag,
-                        sn_lightcurves_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcures.pkl",
-                        sn_parameters_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params.pkl")
-    sn_lc, params = sn_gen.generate_lightcurves(10)
+                        sn_lightcurves_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcurves_field01.pkl",
+                        sn_parameters_path="/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params_field01.pkl")
+    sn_lc, sn_params = sn_gen.generate_lightcurves(n_per_class)
+    print(sn_lc["g"].shape)
 
     plt.plot(obs_days["g"], rrlyrae_lc["g"][0, :], label="RRLyra")
     plt.plot(obs_days["g"], asteroids_lc["g"][0, :], label="Asteroid")
     plt.plot(obs_days["g"], constant_lc["g"][0, :], label="NonVariable")
     plt.plot(obs_days["g"], cepheids_lc["g"][0, :], label="Cepheid")
     plt.plot(obs_days["g"], sn_lc["g"][0, :], label="Supernovae")
+    plt.plot(obs_days["g"], limmag["g"], label="limmag")
 
 
     plt.xlabel("obs day")
@@ -304,5 +320,33 @@ if __name__ == "__main__":
     plt.ylim([27, 20])
     plt.legend()
     plt.show()
+
+    for i in range(100):
+        plt.plot(obs_days["g"], sn_lc["g"][i, :], label="RRLyra")
+    plt.plot(obs_days["g"], limmag["g"], "o-k", label="limmag")
+    plt.xlabel("obs day")
+    plt.ylabel("magnitude")
+    plt.ylim([27, 20])
+    plt.show()
+
+    # Plot mag_distribution
+    bins = np.linspace(16, 26, 100)
+    rr_h, _ = np.histogram(np.mean(rrlyrae_lc["g"], axis=1), bins=bins, density=True)
+    const_h, _ = np.histogram(np.mean(constant_lc["g"], axis=1), bins=bins, density=True)
+    ceph_h, _ = np.histogram(np.mean(cepheids_lc["g"], axis=1), bins=bins, density=True)
+    ast_h, _ = np.histogram(np.amin(asteroids_lc["g"], axis=1), bins=bins, density=True)
+    sn_h, _ = np.histogram(np.min(sn_lc["g"], axis=1), bins=bins, density=True)
+    lim_h, _ = np.histogram(limmag["g"], bins=bins, density=True)
+
+    plt.plot(bins[1:], rr_h, label="RRLyra")
+    plt.plot(bins[1:], const_h, label="Const")
+    plt.plot(bins[1:], ceph_h, label="Ceph")
+    plt.plot(bins[1:], ast_h, label="Ast")
+    plt.plot(bins[1:], sn_h, label="SN")
+    plt.plot(bins[1:], lim_h, label="limm")
+    plt.legend()
+    #plt.xlim([30, 15])
+    plt.show()
+
 
     print("wena")
