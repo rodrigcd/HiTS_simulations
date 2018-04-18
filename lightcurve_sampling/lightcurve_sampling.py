@@ -16,6 +16,7 @@ class LightCurveDatabase(object):
         self.bands = kwargs["bands"]
         self.save_path = kwargs["save_path"]
         self.file_name = kwargs["file_name"]
+        self.n_std_limmag = kwargs["n_std_limmag"]
         self.camera_and_obs_cond_path = kwargs["camera_and_obs_cond_path"]
         self.camera_and_obs_cond = np.load(self.camera_and_obs_cond_path)
 
@@ -85,7 +86,7 @@ class LightCurveDatabase(object):
                 ordered_index = np.argsort(obs_days[band])
                 obs_days[band] = obs_days[band][ordered_index]
                 limmag[band] = limmag[band][ordered_index]
-                extrapolation_limits[band] = [19, np.mean(limmag[band]) + np.std(limmag[band])]
+                extrapolation_limits[band] = [19, np.mean(limmag[band]) + np.std(limmag[band])*self.n_std_limmag]
 
             lightcurves_list = []
             parameters_list = []
@@ -205,6 +206,7 @@ if __name__ == "__main__":
                                      camera_and_obs_cond_path=camera_and_obs_cond_path,
                                      sn_lightcurves_path=sn_lightcurves_path,
                                      sn_parameters_path=sn_parameters_path,
-                                     M33_cepheids_path=M33_cepheids_path)
+                                     M33_cepheids_path=M33_cepheids_path,
+                                     n_std_limmag=n_std_limmag)
 
-    lc_database.generate_lightcurves(n_lightcurves_per_class_per_field=100, shuffled=True)
+    lc_database.generate_lightcurves(n_lightcurves_per_class_per_field=n_per_class_per_field, shuffled=True)
