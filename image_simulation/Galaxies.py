@@ -7,7 +7,7 @@ import pprint
 from astropy.modeling.functional_models import Sersic2D
 from astropy.convolution import Gaussian2DKernel
 from astropy.convolution import convolve
-from mag_to_counts import Mag2Counts
+from MagCounts import Mag2Counts
 
 
 class GalaxyImages(object):
@@ -140,7 +140,6 @@ class GalaxyImages(object):
         return self.current_image, self.profile
 
     def sample_position_galaxy(self, n_samples=1, profile="disc"):
-        # TODO: Sample from luminocity profile for all bands
         if profile == "disc":
             image_to_sample = self.profile[self.bands[0]]["disc_image"]
         else:

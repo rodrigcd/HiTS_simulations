@@ -1,5 +1,4 @@
 import numpy as np
-from read_SNLS import SNLSDatabase
 from ImageFactory import ImageFactory
 import h5py
 from mag_to_counts import Mag2Counts
@@ -8,7 +7,7 @@ import sys
 import pickle
 
 
-class SupernovaDatabase(object):
+class ImageDatabase(object):
 
     def __init__(self, **kwargs):
         # Path

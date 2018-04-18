@@ -66,10 +66,15 @@ class ObsConditions(object):
         psfs = []
         sn_keys = list(self.sn_data.keys())
         for key in sn_keys:
-            psfs.append(self.sn_data[key]["psf"][..., :])
-            # print(psfs[-1].shape)
-        self.psfs = np.concatenate(psfs, axis=2)
+            for i in range(self.sn_data[key]["psf"].shape[2]):
+                psf = self.sn_data[key]["psf"][..., i]
+                if np.isnan(psf).any():
+                    continue
+                psfs.append(psf)
+            print(psfs[-1].shape)
+        self.psfs = np.stack(psfs, axis=2)
         print("psfs shape: "+str(self.psfs.shape))
+        #print(np.amax(self.psfs, axis=(0, 1))[:20])
 
     def generate_obs_conditions(self):
         obs_conditions = []
