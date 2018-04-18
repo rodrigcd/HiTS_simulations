@@ -23,6 +23,7 @@ class ObsConditions(object):
             self.generate_obs_conditions()
             self.save_data()
         else:
+            self.collect_psf()
             self.read_fields()
             self.save_data()
             self.surveysim_data()
@@ -60,6 +61,15 @@ class ObsConditions(object):
             ccd_params["CCD"+str(aux_dict["ccd_num"])] = aux_dict
             #print(aux_dict)
         self.ccd_params = ccd_params
+
+    def collect_psf(self):
+        psfs = []
+        sn_keys = list(self.sn_data.keys())
+        for key in sn_keys:
+            psfs.append(self.sn_data[key]["psf"][..., :])
+            # print(psfs[-1].shape)
+        self.psfs = np.concatenate(psfs, axis=2)
+        print("psfs shape: "+str(self.psfs.shape))
 
     def generate_obs_conditions(self):
         obs_conditions = []
@@ -103,8 +113,8 @@ class ObsConditions(object):
                 self.obs_cond["Field"+str(field).zfill(2)].append(aux_dict)
 
     def save_data(self):
-        aux_dict = {"camera_params": self.ccd_params, "obs_conditions": self.obs_cond}
-        with open('camera_and_obs_cond.pkl', 'wb') as f:
+        aux_dict = {"camera_params": self.ccd_params, "obs_conditions": self.obs_cond, "psf": self.psfs}
+        with open('pickles/camera_and_obs_cond.pkl', 'wb') as f:
             pickle.dump(aux_dict, f)
 
     def surveysim_data(self):
@@ -128,7 +138,7 @@ class ObsConditions(object):
                     n_g += 1
                 line = str(day)+" "+epoch["filter"]+" "+str(exp_time)+" "+str(airmass)+" "+str(aux_epoch)
                 aux_file.write(line+"\n")
-            print(n_g)
+            #print(n_g)
             aux_file.close()
 
 
@@ -145,7 +155,7 @@ if __name__ == "__main__":
     per_field_epoch = True
 
     obs_conditions = ObsConditions(sequence_length=25,
-                                   sn_data_path="sn_data.pkl",
+                                   sn_data_path="pickles/sn_data.pkl",
                                    ccd_parameters_keys=ccd_parameters_keys,
                                    zero_point_path=zero_points_path,
                                    obs_conditions_keys=obs_conditions_keys,
