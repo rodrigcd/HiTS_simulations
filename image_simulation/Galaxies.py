@@ -126,7 +126,7 @@ class GalaxyImages(object):
         img = np.sum(images, axis=0)/n_iter
         return img
 
-    def create_galaxy_image(self, band, t_exp, seeing, airmass, zero_point, airmass_term, params={}):
+    def create_galaxy_image(self, band, t_exp, seeing, airmass, zero_point, airmass_term, psf, params={}):
         if len(params) == 0:
             params = self.current_parameters
 
@@ -134,8 +134,11 @@ class GalaxyImages(object):
         mag = params["petroMag_" + band]
         galaxy_counts = Mag2Counts(mag, airmass, t_exp, zero_point, airmass_term=airmass_term)
         img = self.profile[band]["norm_image"] * galaxy_counts
-        kernel = Gaussian2DKernel(seeing / (2 * np.sqrt(2)))
-        img = convolve(img, kernel)
+        if psf is None:
+            kernel = Gaussian2DKernel(seeing / (2 * np.sqrt(2)))
+            img = convolve(img, kernel)
+        else:
+            img = convolve(img, psf)
         self.current_image[band] = img
         return self.current_image, self.profile
 
@@ -152,10 +155,10 @@ class GalaxyImages(object):
         index_sampled = image_distr.rvs(size=n_samples)
         return self.image_index_array[index_sampled]
 
-    def generate_galaxy_stamp(self, band, t_exp, seeing, airmass, zero_point, airmass_term, params={}):
+    def generate_galaxy_stamp(self, band, t_exp, seeing, airmass, zero_point, airmass_term, psf=None, params={}):
         if len(params) == 0:
             params = self.current_parameters
-        img, _ = self.create_galaxy_image(band, t_exp, seeing, airmass, zero_point, airmass_term, params)
+        img, _ = self.create_galaxy_image(band, t_exp, seeing, airmass, zero_point, airmass_term, psf, params)
         row_limits = np.array([params["pos_row"]-self.stamp_size[0]/2,
                                params["pos_row"]+self.stamp_size[0]/2+1], dtype=np.int)
         column_limits = np.array([params["pos_col"]-self.stamp_size[1]/2,

@@ -66,8 +66,8 @@ class LightCurveDatabase(object):
         hdf5_file = h5py.File(self.save_path + self.file_name + ".hdf5", "w")
         field_parameters = {}
         for field in self.field_list:
-            if field == "Field04":
-                continue
+            # if field == "Field04":
+            #   continue
 
             field_group = hdf5_file.create_group(field)
 
