@@ -149,7 +149,7 @@ class ObsConditions(object):
 
 if __name__ == "__main__":
 
-    ccd_parameters_keys = ["ccd_num", "gain", "read_noise", "saturation"]
+    ccd_parameters_keys = ["ccd_num", "gain", "read_noise", "saturation", "pixel_scale"]
     obs_conditions_keys = ["sky_brightness", "airmass", "exp_time", "obs_day",
                            "filter", "seeing", "epoch", "limmag5", "limmag3", "zero_point"]
     npy_keys = ["BACK_LEVEL", "AIRMASS", "EXP_TIME", "MJD", "FILTER", "SEEING", "EPOCH",

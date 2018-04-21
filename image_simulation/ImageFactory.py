@@ -8,28 +8,38 @@ from Galaxies import GalaxyImages
 class ImageFactory:
 
     def __init__(self, **kwargs):
+        print("Creating Image Factory")
         self.nx, self.ny = kwargs["nx"], kwargs["ny"]
-        self.readout_noise = kwargs["readout_noise"]
         self.x, self.y = np.mgrid[-self.nx/2.: self.nx/2., -self.ny/2.: self.ny/2.] + 0.5
-        self.gain = kwargs["gain"]
-        self.pixel_saturation = kwargs["pixel_saturation"]
         self.astrometric_error = kwargs["astrometric_error"]
-        self.pixel_size = kwargs["pixel_size"]
-        self.galaxies_distr_path = kwargs["galaxies_distr_path"]
-        self.zero_points = kwargs["zero_point"] #["g", "r", "i"]
-        self.exp_times = kwargs["exp_times"]
-        self.airmass_terms = kwargs["airmass_terms"]
         self.bands = kwargs["bands"]
         self.sky_clipping = kwargs["sky_clipping"]
+        self.galaxies_distr_path = kwargs["galaxies_distr_path"]
+
+        self.ccd_parameters = kwargs["ccd_parameters"]
+        self.readout_noise = self.ccd_parameters["read_noise"]
+        self.gain = self.ccd_parameters["gain"]
+        self.pixel_saturation = self.ccd_parameters["saturation"]
+        self.pixel_size = self.ccd_parameters["pixel_scale"]
+
+        #self.zero_points = kwargs["zero_point"] #["g", "r", "i"]
+        #self.exp_times = kwargs["exp_times"]
+        #self.airmass_terms = 0.15 #HardCoded
 
         self.galaxies_gen = GalaxyImages(distr_path=self.galaxies_distr_path,
                                          pixel_size=self.pixel_size,
                                          stamp_size=(self.nx, self.ny),
                                          image_size=(3*self.nx, 3*self.ny),
-                                         zero_points=self.zero_points,
                                          n_integrations=20,
                                          bands=self.bands,
                                          load_all_data=True)
+
+    def set_ccd_params(self, params):
+        self.ccd_parameters = params
+        self.readout_noise = self.ccd_parameters["read_noise"]
+        self.gain = self.ccd_parameters["gain"]
+        self.pixel_saturation = self.ccd_parameters["saturation"]
+        self.pixel_size = self.ccd_parameters["pixel_scale"]
 
     def createPSFImage(self, band, counts, seeing, airmass, sky_counts, mean, zero_point, exp_time):
         """each input is just a scalar"""
@@ -94,19 +104,7 @@ class ImageFactory:
 
 
 if __name__ == "__main__":
-    gain = 1.67 #[e-/ADU]
-    counts = [2000, 3000] #ADU
-    sky_counts = [10, 30] #ADU/pixel
-    seeing = 5 #pixel
-    nx, ny = 21, 21 #pixels
-    readout_noise = 5 #sigma of gaussian (ADU)
-    imfact = ImageFactory(nx, ny, readout_noise, gain)
-    images, counts = imfact.createLightCurveImages(counts, seeing, sky_counts)
-    print(images.shape)
-    plt.imshow(images[:, :, 0])
-    plt.savefig("image1.png")
-    plt.imshow(images[:, :, 1])
-    plt.savefig("image2.png")
+    a = 2
 
 
 

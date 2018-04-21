@@ -8,6 +8,7 @@ from tqdm import tqdm
 class PSFSampler(object):
 
     def __init__(self, **kwargs):
+        print("Creating PSF Sampler")
         self.cam_obs_cond_path = kwargs["camera_and_obs_cond_path"]
         self.psfs = np.load(self.cam_obs_cond_path)["psf"]
         self.nx, self.ny, self.n_psfs = self.psfs.shape

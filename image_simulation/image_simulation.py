@@ -1,10 +1,11 @@
 import numpy as np
 from ImageFactory import ImageFactory
 import h5py
-from mag_to_counts import Mag2Counts
+from MagCounts import Mag2Counts
 import time
 import sys
 import pickle
+import matplotlib.pyplot as plt
 
 
 class ImageDatabase(object):
@@ -14,93 +15,89 @@ class ImageDatabase(object):
         self.save_path = kwargs["save_path"]
         self.output_filename = kwargs["output_filename"]
         self.bands = kwargs["bands"]
-        self.SNLS_path = kwargs["SNLS_path"]
-        self.limmag = kwargs["limmag"]
-        self.days = kwargs["days"]
         self.galaxies_distr_path = kwargs["galaxies_distr_path"]
         self.lc_path = kwargs["lc_path"]
+        self.camera_and_obs_cond = np.load(kwargs["cam_and_obs_cond_path"])
+        self.camera_params = self.camera_and_obs_cond["camera_params"]
+        self.obs_cond = self.camera_and_obs_cond["obs_conditions"]
         # Light curves to simulate
         self.requested_lightcurves = kwargs["requested_lightcurves"]
         self.requested_lightcurves_labels = kwargs["requested_lightcurves_labels"]
         self.stamp_size = kwargs["stamp_size"]
         self.prop_lightcurves_with_galaxies = kwargs["prop_lightcurves_with_galaxies"]
         # Instrument and observation conditions
-        self.zero_points = kwargs["zero_point"]
-        self.exp_times = kwargs["exp_times"]
         self.lc_per_chunk = kwargs["lc_per_chunk"]
-        self.airmass_term = kwargs["airmass_term"]
-        self.readout_noise = kwargs["readout_noise"]
-        self.gain = kwargs["gain"]
-        self.pixel_saturation = kwargs["pixel_saturation"]
-        self.pixel_scale = kwargs["pixel_scale"]
         self.sky_clipping = kwargs["estimated_sky_clipping"]
         # Light curves parameters
         self.astrometric_error = kwargs["astrometric_error"]
         self.image_stacking_time = kwargs["image_stacking_time"]
 
-        self.SNLS_database = SNLSDatabase(lightcurve_directory=self.SNLS_path, load_pickle=True)
         self.image_factory = ImageFactory(nx=self.stamp_size[0],
                                           ny=self.stamp_size[1],
-                                          readout_noise=self.readout_noise,
-                                          gain=self.gain,
-                                          pixel_saturation=self.pixel_saturation,
                                           astrometric_error=self.astrometric_error,
-                                          pixel_size=self.pixel_scale,
                                           galaxies_distr_path=self.galaxies_distr_path,
-                                          zero_point=self.zero_points,
-                                          exp_times=self.exp_times,
                                           bands=self.bands,
                                           sky_clipping=self.sky_clipping,
-                                          airmass_terms=self.airmass_term)
+                                          ccd_parameters=self.camera_params["CCD25"])
 
-        self.observation_conditions()
+        self.load_obs_conditions()
         self.load_lightcurves()
         self.mag_to_counts()
-        self.make_save_images()
+        # self.make_save_images()
 
-    def observation_conditions(self):
-        # it produces (self.days_SNLS, self.sky_SNLS)
-        #print(self.lightcurves.shape[1])
-        print("reading observation conditions from SNLS")
-        self.observation_data = self.SNLS_database.filter_data
-        self.seeing = {}
-        self.sky_estimation = {}
-        self.airmass = {}
-        for band in self.bands:
-            self.seeing[band] = self.observation_data[band]["seeing"][:len(self.days[band])]
-            self.sky_estimation[band] = self.observation_data[band]["estimated_sky"][:len(self.days[band])]
-            self.airmass[band] = self.observation_data[band]["airmass"][:len(self.days[band])]
-        print(str(self.observation_data.keys()))
-        print(str(self.observation_data[self.observation_data.keys()[0]].keys()))
-        for i in self.sky_estimation.keys():
-            print(self.sky_estimation[i][:5])
+    # TODO: STEP BY STEP UNTIL EVERYTHING WORKS
+    def load_obs_conditions(self):
+        # This part is horrible, I'm sorry
+        fields = list(self.obs_cond.keys())
+        self.sorted_obs_cond = {}
+        epoch_keys = list(self.obs_cond[fields[0]][0].keys())
+        for field in fields:
+            self.sorted_obs_cond[field] = {}
+            epoch_list = self.obs_cond[field]
+            for key in epoch_keys:
+                self.sorted_obs_cond[field][key] = {}
+                for band in ["g", "r", "i"]:
+                    self.sorted_obs_cond[field][key][band] = []
+
+            aux_epochs = self.obs_cond[field]
+            for epoch in epoch_list:
+                for key in epoch_keys:
+                    self.sorted_obs_cond[field][key][epoch["filter"]].append(epoch[key])
+            for band in self.bands:
+                sorted_index = np.argsort(self.sorted_obs_cond[field]["obs_day"][band])
+                for key in epoch_keys:
+                    self.sorted_obs_cond[field][key][band] = np.array(self.sorted_obs_cond[field][key][band])[sorted_index]
+            #print(list(self.sorted_obs_cond.keys()))
+            #print(list(self.sorted_obs_cond["Field01"].keys()))
+            #print(list(self.sorted_obs_cond["Field01"]["sky_brightness"].keys()))
+            #for key in epoch_keys:
+            #    print("-----"+key+"-----")
+            #    for band in ["g", "r", "i"]:
+            #        print("band: "+band)
+            #        print(self.sorted_obs_cond["Field01"][key][band])
+
+
 
     def load_lightcurves(self):
-        data = h5py.File(self.lc_path+".hdf5", "r")
-        print(data.keys())
-        m_lightcurves = data["lightcurves"]  # dictionary
-        self.m_lightcurves = {}
-        for band in self.bands:
-            self.m_lightcurves[band] = m_lightcurves[band][:]
-        n_per_type = data["n_lc_per_type"]
-        self.n_per_type = {}
-        for object_name in self.requested_lightcurves:
-            self.n_per_type[object_name] = n_per_type[object_name][()]
-        self.labels = data["labels"][:]
-        self.lc_type = data["lc_type"][:]
-        #self.params = data["parameters"]  # dictionary
-        self.params = np.load(self.lc_path+".pkl")["parameters"]
-        self.lc_id = data["lc_id"][:]
-        self.n_lightcurves = len(self.labels)
+        self.data = h5py.File(self.lc_path+".hdf5", "r")
+        self.lc_params = np.load(self.lc_path+".pkl")
+        self.fields = list(self.data.keys())
+        print("light curve classes found")
+        data_classes = list(self.data[list(self.data.keys())[0]]["n_lc_per_type"].keys())
+        self.n_per_type = self.data[list(self.data.keys())[0]]["n_lc_per_type"]
+        print(data_classes)
+        print("n light curves found")
+        self.n_lightcurves = len(list(self.data.keys()))*self.data[list(self.data.keys())[0]]["lc_id"].shape[0]
+        print(self.n_lightcurves)
         self.lc_with_galaxies = {}
         self.lc_with_galaxies_count = {}
         self.type_count = {}
-        for lc_type in np.unique(self.lc_type):
+        for lc_type in data_classes:
             aux_index = self.requested_lightcurves.index(lc_type)
-            n = self.n_per_type[lc_type]*self.prop_lightcurves_with_galaxies[aux_index]
+            n = self.n_per_type[lc_type][()]*self.prop_lightcurves_with_galaxies[aux_index]
             n = int(np.floor(n))
             aux = np.concatenate([np.ones(shape=(n,)),
-                                  np.zeros(shape=(self.n_per_type[lc_type]-n,))],
+                                  np.zeros(shape=(self.n_per_type[lc_type][()]-n,))],
                                  axis=0)
             np.random.shuffle(aux)
             self.lc_with_galaxies[lc_type] = aux
@@ -109,13 +106,20 @@ class ImageDatabase(object):
     def mag_to_counts(self, sky_from_SNLS = True, save_lc=False):
         print("From magnitudes to counts")
         self.c_lightcurves = {}
-        for band in self.bands:
-            self.c_lightcurves[band] = Mag2Counts(self.m_lightcurves[band],
-                                                  self.airmass[band],
-                                                  self.exp_times[band],
-                                                  self.zero_points[band],
-                                                  self.airmass_term[band])
+        for field in self.fields:
+            self.c_lightcurves[field] = {}
+            for band in self.bands:
+                m_lightcurves = self.data[field]["lightcurves"][band][:]
+                self.c_lightcurves[field][band] = Mag2Counts(lightcurves=m_lightcurves,
+                                                             airmass_per_obs=None,
+                                                             t_exp=self.sorted_obs_cond[field]["exp_time"][band],
+                                                             zero_point=self.sorted_obs_cond[field]["zero_point"][band])
+                print(self.c_lightcurves[field][band].shape)
+                plt.plot(self.sorted_obs_cond[field]["obs_day"]["g"], self.c_lightcurves[field][band][0,:])
+                plt.show()
+        print(self.c_lightcurves["Field01"]["g"][:10, :10])
 
+    # TODO: Only this part
     def make_save_images(self):
 
         def stack_images(images, gal_images, lighcurves, days, stacking_time):
@@ -343,34 +347,37 @@ class ImageDatabase(object):
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "SNLS":
-        from config_images import *
-    elif sys.argv[1] == "KMTNet":
-        from config_images_KMTNet import *
+
+    save_path = "/home/rodrigo/supernovae_detection/simulated_data/image_sequences/"
+    output_filename = "wena"
+    bands = ["g",]
+    galaxy_path = "/home/rodrigo/supernovae_detection/galaxies/gal_mags_dev_exp_z_all_Filter_rodrigocd.csv"
+    lightcurves_path = "/home/rodrigo/supernovae_detection/simulated_data/lightcurves/hits_100"
+    camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
+    requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "NonVariable", "EmptyLightCurve", "Asteroids"]
+    requested_lightcurve_labels = [0, 1, 2, 3, 4, 5]  # multiclass
+    stamp_size = (21, 21)
+    proportion_with_galaxy = [0.5, 0.05, 0.05, 0.05, 0.5, 0]
+    lc_per_chunk = 100
+    sky_clipping = 2000
+    astrometric_error = 0.3
+    image_stacking_time = 0
+
     start = time.time()
-    database = SupernovaDatabase(save_path=save_path,
-                                 output_filename=output_filename,
-                                 lc_path=lc_path,
-                                 SNLS_path=SNLS_path,
-                                 days=observation_days,
-                                 limmag=limmag,
-                                 galaxies_distr_path=galaxies_distr_path,
-                                 requested_lightcurves=requested_lightcurve,
-                                 requested_lightcurves_labels=requested_lightcurve_labels,
-                                 prop_lightcurves_with_galaxies=prop_lightcurves_with_galaxies,
-                                 pixel_scale=pixel_scale,
-                                 zero_point=zero_points,
-                                 exp_times=exp_times,
-                                 airmass_term=airmass_term,
-                                 stamp_size=stamp_size,
-                                 readout_noise=readout_noise,
-                                 gain=gain,
-                                 pixel_saturation=pixel_saturation,
-                                 lc_per_chunk=lc_per_chunk,
-                                 estimated_sky_clipping=estimated_sky_clipping,
-                                 astrometric_error=astrometric_error,
-                                 bands=bands,
-                                 image_stacking_time=image_stacking_time)
+    database = ImageDatabase(save_path=save_path,
+                             output_filename=output_filename,
+                             bands=bands,
+                             galaxies_distr_path=galaxy_path,
+                             lc_path=lightcurves_path,
+                             cam_and_obs_cond_path=camera_and_obs_cond_path,
+                             requested_lightcurves=requested_lightcurve,
+                             requested_lightcurves_labels=requested_lightcurve_labels,
+                             stamp_size=stamp_size,
+                             prop_lightcurves_with_galaxies=proportion_with_galaxy,
+                             lc_per_chunk=lc_per_chunk,
+                             estimated_sky_clipping=sky_clipping,
+                             astrometric_error=astrometric_error,
+                             image_stacking_time=image_stacking_time)
     end = time.time()
     print("elapsed time: " + str(end - start))
     print("wena")

@@ -15,7 +15,7 @@ def Mag2Counts(lightcurves, airmass_per_obs=None, t_exp=225.0, zero_point=26.59,
             c_lightcurves = []
             for i in range(lightcurves.shape[0]):
                 power = (lightcurves[i, :] - zero_point)/-2.5
-                c_lightcurves.append(np.floor(np.power(10, power) * t_exp)[np.newaxis, ...])
+                c_lightcurves.append(np.floor(np.multiply(np.power(10, power), t_exp))[np.newaxis, ...])
             c_lightcurves = np.concatenate(c_lightcurves, axis=0)
             return c_lightcurves
         else:

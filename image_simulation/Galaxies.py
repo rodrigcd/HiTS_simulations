@@ -13,6 +13,7 @@ from MagCounts import Mag2Counts
 class GalaxyImages(object):
     """Generates galaxy images"""
     def __init__(self, **kwargs):
+        print("Creating galaxy generator")
         self.distr_path = kwargs["distr_path"]
         self.stamp_size = kwargs["stamp_size"]
         self.image_size = kwargs["image_size"]
