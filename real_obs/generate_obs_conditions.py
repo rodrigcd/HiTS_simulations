@@ -15,6 +15,7 @@ class ObsConditions(object):
         self.per_field_epoch = kwargs["per_field_epoch"]
         self.field_cond_path = kwargs["field_cond_path"]
         self.npy_keys = kwargs["npy_keys"]
+        self.pixel_scale = kwargs["pixel_scale"]
         self.fixed_seed = 123
         self.sn_data = np.load(self.data_path)
         self.get_zero_points()
@@ -83,7 +84,12 @@ class ObsConditions(object):
         for key in sn_keys:
             aux_dict = {}
             for obs_key in self.obs_conditions_keys:
-                aux_dict[obs_key] = self.sn_data[key]["headers"][obs_key][:self.sequence_length]
+                if obs_key == "seeing":
+                    aux_dict[obs_key] = self.sn_data[key]["headers"][obs_key][:self.sequence_length]/self.pixel_scale
+                    print(obs_key)
+                    print(aux_dict[obs_key])
+                else:
+                    aux_dict[obs_key] = self.sn_data[key]["headers"][obs_key][:self.sequence_length]
             aux_dict["psf"] = self.sn_data[key]["psf"][..., :self.sequence_length]
             self.unique_obs_days.append(self.sn_data[key]["headers"]["obs_days"][:self.sequence_length])
             obs_conditions.append(aux_dict)
@@ -104,6 +110,9 @@ class ObsConditions(object):
                 try:
                     if key == "FILTER":
                         aux_dict[self.obs_conditions_keys[i]] = str(info_array[key])[2]
+                    elif key == "SEEING":
+                        aux_dict[self.obs_conditions_keys[i]] = np.float(info_array[key])/pixel_scale
+                        #print(aux_dict[self.obs_conditions_keys[i]])
                     else:
                         aux_dict[self.obs_conditions_keys[i]] = np.float(info_array[key])
                 except:
@@ -158,6 +167,7 @@ if __name__ == "__main__":
     fields_cond_path = "./Blind15A_info/"
     surveysim_data_path = "/home/rodrigo/supernovae_detection/surveysim/obsplans/"
     per_field_epoch = True
+    pixel_scale = 0.27
 
     obs_conditions = ObsConditions(sequence_length=25,
                                    sn_data_path="pickles/sn_data.pkl",
@@ -167,6 +177,7 @@ if __name__ == "__main__":
                                    npy_keys=npy_keys,
                                    surveysim_data_path=surveysim_data_path,
                                    per_field_epoch=per_field_epoch,
-                                   field_cond_path=fields_cond_path)
+                                   field_cond_path=fields_cond_path,
+                                   pixel_scale=pixel_scale)
 
     # obs_conditions.surveysim_data()

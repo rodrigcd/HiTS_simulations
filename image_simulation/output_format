@@ -1,0 +1,29 @@
+data = h5py.File("multiclass_SNLS_for_phot.hdf5")
+
+In [3]: data.keys()
+Out[3]: KeysView(<HDF5 file "multiclass_SNLS_for_phot.hdf5" (mode r+)>)
+
+In [4]: list(data.keys())
+Out[4]: ['g', 'ids', 'labels', 'lc_type']
+
+In [5]: list(data["g"].keys())
+Out[5]: 
+['airmass',
+ 'complete_counts_lc',
+ 'counts_lightcurves',
+ 'gal_images',
+ 'galaxy_flag',
+ 'ids',
+ 'images',
+ 'lightcurves',
+ 'limmag',
+ 'observation_days',
+ 'seeing',
+ 'sky_estimation',
+ 'stacked_airmass',
+ 'stacked_index',
+ 'stacked_limmag',
+ 'stacked_observation_days',
+ 'stacked_seeing',
+ 'stacked_sky_estimation']
+
