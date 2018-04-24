@@ -65,7 +65,8 @@ class LightCurveDatabase(object):
 
         hdf5_file = h5py.File(self.save_path + self.file_name + ".hdf5", "w")
         field_parameters = {}
-        for field in self.field_list:
+        for i_field, field in enumerate(self.field_list):
+            print("Simulating for field "+field)
             # if field == "Field04":
             #   continue
 
@@ -96,7 +97,7 @@ class LightCurveDatabase(object):
 
             for i, lightcurve_obj in enumerate(self.lightcurve_objects):
                 class_name = lightcurve_obj.__class__.__name__
-                print("Sampling "+lightcurve_obj.__class__.__name__+" light curves")
+
                 n_same_label = labels_counts[unique_labels == self.requested_lightcurves_labels[i]]
                 n_lc = int(np.round(np.true_divide(n_lightcurves_per_class_per_field, n_same_label)))
                 if class_name == "Supernovae":
@@ -114,8 +115,10 @@ class LightCurveDatabase(object):
                 # print(type(params["g"]))
                 labels.append(self.requested_lightcurves_labels[i] * np.ones(shape=(n_lc,)))
                 lc_type += [lightcurve_obj.__class__.__name__] * n_lc
-                print(str(n_lc) + " " + lightcurve_obj.__class__.__name__ + " light curves")
-                print(str(len(lc["g"])) + " " + lightcurve_obj.__class__.__name__ + " light curves generated")
+                #print(str(n_lc) + " " + lightcurve_obj.__class__.__name__ + " light curves")
+                if i_field == 0:
+                    print("Sampling " + lightcurve_obj.__class__.__name__ + " light curves")
+                    print(str(len(lc["g"])) + " " + lightcurve_obj.__class__.__name__ + " light curves generated")
                 n_lc_per_type[lightcurve_obj.__class__.__name__] = n_lc
 
             lightcurves = {}
@@ -147,7 +150,7 @@ class LightCurveDatabase(object):
             shuffled_index = np.concatenate(label_index, axis=0)
             np.random.shuffle(shuffled_index)
 
-            print(lightcurves["g"].shape)
+            print("lightcurves shape: "+str(lightcurves["g"].shape))
 
             for band in self.bands:
                 lightcurves[band] = lightcurves[band][shuffled_index, ...]
@@ -186,6 +189,9 @@ class LightCurveDatabase(object):
             # hdf5_file.create_dataset("obs_days", data=self.observation_days)
             # hdf5_file.create_dataset("limmag", data=self.limmag)
             field_parameters[field] = parameters
+
+        print("Total number of lightcurves per class: "+str(len(self.field_list)*n_lightcurves_per_class_per_field))
+        print("Total number of lightcurves: "+str(len(self.field_list)*n_lightcurves_per_class_per_field*len(self.requested_lightcurves)))
 
         pickle.dump(field_parameters,
                     open(self.save_path + self.file_name + ".pkl", "wb"),

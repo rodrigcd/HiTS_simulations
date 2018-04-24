@@ -8,14 +8,14 @@ from tqdm import tqdm
 class PSFSampler(object):
 
     def __init__(self, **kwargs):
-        print("Creating PSF Sampler")
+        #print("PSF Sampler")
         self.cam_obs_cond_path = kwargs["camera_and_obs_cond_path"]
         self.psfs = np.load(self.cam_obs_cond_path)["psf"]
         self.nx, self.ny, self.n_psfs = self.psfs.shape
         self.psf_match()
 
     def psf_match(self, plot_n_examples=20):
-        print("Doing psf match to compute SEEING")
+        print("Doing gaussian fit to psf to compute SEEING")
 
         n_plotted = 0
         x, y = np.mgrid[-self.nx / 2.: self.nx / 2., -self.ny / 2.: self.ny / 2.]
@@ -23,7 +23,7 @@ class PSFSampler(object):
         fit_p = fitting.LevMarLSQFitter()
 
         self.psf_seeing_xy = [] # [x, y]
-        for i in tqdm(range(self.psfs.shape[2])):
+        for i in range(self.psfs.shape[2]):
             p_init = models.Gaussian2D(amplitude=np.mean(self.psfs[..., i]), x_mean=0.0, y_mean=0,
                                        x_stddev=1.9, y_stddev=1.9)
 

@@ -3,18 +3,24 @@ from astropy.io import fits
 import numpy as np
 import matplotlib.pyplot as plt
 from Galaxies import GalaxyImages
-
+from psf_sampler import PSFSampler
 
 class ImageFactory:
 
     def __init__(self, **kwargs):
-        print("Creating Image Factory")
+        # print("Image Factory")
         self.nx, self.ny = kwargs["nx"], kwargs["ny"]
         self.x, self.y = np.mgrid[-self.nx/2.: self.nx/2., -self.ny/2.: self.ny/2.] + 0.5
         self.astrometric_error = kwargs["astrometric_error"]
         self.bands = kwargs["bands"]
         self.sky_clipping = kwargs["sky_clipping"]
         self.galaxies_distr_path = kwargs["galaxies_distr_path"]
+        self.real_psfs = kwargs["real_psfs"]
+        if self.real_psfs:
+            print("- Using PSF sampler")
+            self.psf_sampler = PSFSampler(camera_and_obs_cond_path=kwargs["obs_cond_path"])
+        else:
+            self.airmass_terms = kwargs["airmass_term"]
 
         self.ccd_parameters = kwargs["ccd_parameters"]
         self.readout_noise = self.ccd_parameters["read_noise"]
@@ -26,6 +32,7 @@ class ImageFactory:
         #self.exp_times = kwargs["exp_times"]
         #self.airmass_terms = 0.15 #HardCoded
 
+        print("- Galaxy images")
         self.galaxies_gen = GalaxyImages(distr_path=self.galaxies_distr_path,
                                          pixel_size=self.pixel_size,
                                          stamp_size=(self.nx, self.ny),
@@ -43,13 +50,18 @@ class ImageFactory:
 
     def createPSFImage(self, band, counts, seeing, airmass, sky_counts, mean, zero_point, exp_time):
         """each input is just a scalar"""
-        # seeing to sigmas
-        sigma = seeing/(2*np.sqrt(2*np.log(2)))
-        # gaussian model
+        if self.real_psfs:
+            psf, _ = self.psf_sampler.sample_psf(seeing)
+            data = np.copy(psf)
+        else:
+            # seeing to sigmas
+            sigma = seeing/(2*np.sqrt(2*np.log(2)))
+            # gaussian model
 
-        model = models.Gaussian2D(x_mean=mean[0], y_mean=mean[1],
-                                  x_stddev=sigma, y_stddev=sigma)
-        data = model(self.x, self.y)
+            model = models.Gaussian2D(x_mean=mean[0], y_mean=mean[1],
+                                      x_stddev=sigma, y_stddev=sigma)
+            data = model(self.x, self.y)
+            psf = np.copy(data)
         # insert gaussian
         # data = np.round(data*counts/data.sum()).astype(int)
         data = np.floor(data*counts/np.sum(data))
@@ -59,8 +71,18 @@ class ImageFactory:
         data += np.floor(np.amin([sky_counts, self.sky_clipping]))
         # adding galaxy
         if self.with_galaxy:
-            galaxy_image = self.galaxies_gen.generate_galaxy_stamp(band, exp_time, seeing, airmass,
-                                                            zero_point, airmass_term=self.airmass_terms[band])
+            if self.real_psfs:
+                galaxy_image = self.galaxies_gen.generate_galaxy_stamp(band=band,
+                                                                       t_exp=exp_time,
+                                                                       seeing=seeing,
+                                                                       airmass=None,
+                                                                       zero_point=zero_point,
+                                                                       airmass_term=0.15,
+                                                                       psf=psf)
+            else:
+                galaxy_image = self.galaxies_gen.generate_galaxy_stamp(band, exp_time, seeing, airmass,
+                                                                       zero_point,
+                                                                       airmass_term=self.airmass_terms[band])
             data += galaxy_image
         else:
             galaxy_image = np.zeros(shape=(self.nx, self.ny))
@@ -76,31 +98,41 @@ class ImageFactory:
         data = np.clip(data, 0, self.pixel_saturation)
         data = np.floor(data)
         data.astype(int)
-        return data, galaxy_image
+        return data, galaxy_image, psf
 
-    def createLightCurveImages(self, counts, seeing, airmass, sky_counts, zero_point, with_galaxy, redshift=[]):
+    def createLightCurveImages(self, counts, seeing, airmass, sky_counts, exp_time, zero_point, with_galaxy, redshift=[]):
         """ Creates light curve image from counts, each variable (counts, seeing, airmass, sky_counts)
         should be a dictionary with keys for each band"""
         images = {}
         gal_image = {}
+        psf_image = {}
         cov = np.diag([self.astrometric_error**2, self.astrometric_error**2])
         self.with_galaxy = with_galaxy
         if with_galaxy:
             self.galaxies_gen.sample_galaxy(redshift=redshift)
+
         for band in self.bands:
             x_mean, y_mean = np.random.multivariate_normal([0, 0], cov, counts[band].shape[1]).T
             band_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="int")
             band_gal_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="int")
+            band_psf_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="int")
             for i in range(counts[band].shape[1]):
                 mean = [x_mean[i], y_mean[i]]
-                im, gal = self.createPSFImage(band, counts[band][0, i], seeing[band][i],
-                                              airmass[band][i], sky_counts[band][i], mean, zero_point[band],
-                                              self.exp_times[band])
+                if airmass is None:
+                    im, gal, psf = self.createPSFImage(band, counts[band][0, i], seeing[band][i],
+                                                  airmass, sky_counts[band][i], mean, zero_point[band][i],
+                                                  exp_time[band][i])
+                else:
+                    im, gal, psf = self.createPSFImage(band, counts[band][0, i], seeing[band][i],
+                                                  airmass[band][i], sky_counts[band][i], mean, zero_point[band][i],
+                                                  exp_time[band][i])
                 band_image[..., i] = im[:]
                 band_gal_image[..., i] = gal[:]
+                band_psf_image[..., i] = psf[:]
             images[band] = band_image
             gal_image[band] = band_gal_image
-        return images, gal_image
+            psf_image[band] = band_gal_image
+        return images, gal_image, psf_image
 
 
 if __name__ == "__main__":

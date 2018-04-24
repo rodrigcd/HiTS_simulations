@@ -13,7 +13,7 @@ from MagCounts import Mag2Counts
 class GalaxyImages(object):
     """Generates galaxy images"""
     def __init__(self, **kwargs):
-        print("Creating galaxy generator")
+        # print("Galaxy generator")
         self.distr_path = kwargs["distr_path"]
         self.stamp_size = kwargs["stamp_size"]
         self.image_size = kwargs["image_size"]
@@ -55,7 +55,7 @@ class GalaxyImages(object):
 
         self.distr_dataframe = self.distr_dataframe[condition]
 
-    def sample_galaxy(self, redshift=[], z_tolerance=0.1, by_id=False, centered=False):
+    def sample_galaxy(self, redshift=[], z_tolerance=0.1, by_id=False, centered=False, repeated=False):
         self.redshift = redshift
         if not redshift:
             z_dataframe = self.distr_dataframe
@@ -79,7 +79,9 @@ class GalaxyImages(object):
         if centered:
             self.pos = np.array([[self.image_size[0]/2, self.image_size[1]/2], ])
         else:
-            self.pos = self.sample_position_galaxy()
+            self.pos = self.sample_position_galaxy(repeated=repeated)
+        if len(self.pos) > 1:
+            self.sample_galaxy(redshift, repeated=True)
         self.current_parameters["pos_row"] = self.pos[0, 0]
         self.current_parameters["pos_col"] = self.pos[0, 1]
 
@@ -109,7 +111,7 @@ class GalaxyImages(object):
             band_profile["img1"] = band_profile["mod1"](x, y)
             band_profile["norm_image"] = (band_profile["img1"] + band_profile["img2"]) /\
                                           np.sum(band_profile["img1"] + band_profile["img2"])
-            band_profile["disc_image"] = band_profile["img1"]/np.sum(band_profile["img1"])
+            band_profile["disc_image"] = band_profile["img1"]/(np.sum(band_profile["img1"])+1.0e-10)
             self.profile[band] = band_profile
             band_profile = {}
 
@@ -143,14 +145,18 @@ class GalaxyImages(object):
         self.current_image[band] = img
         return self.current_image, self.profile
 
-    def sample_position_galaxy(self, n_samples=1, profile="disc"):
+    def sample_position_galaxy(self, n_samples=1, profile="disc", repeated=False):
         if profile == "disc":
             image_to_sample = self.profile[self.bands[0]]["disc_image"]
         else:
             image_to_sample = self.profile[self.bands[0]]["norm_image"]
         if not np.isclose(np.sum(image_to_sample), 1):
-            return True, image_to_sample, self.current_parameters
-            # image_to_sample = image_to_sample/np.sum(image_to_sample)
+            if repeated:
+                print("SAMPLING GALAXY FOR SECOND TIME!! :O")
+                image_to_sample = image_to_sample + 1
+                image_to_sample = image_to_sample / np.sum(image_to_sample)
+            else:
+                return True, image_to_sample, self.current_parameters
         reshaped_image = np.reshape(image_to_sample, newshape=(-1,))
         image_distr = stats.rv_discrete(name='image_distr', values=(self.image_distr_x, reshaped_image))
         index_sampled = image_distr.rvs(size=n_samples)
@@ -160,10 +166,10 @@ class GalaxyImages(object):
         if len(params) == 0:
             params = self.current_parameters
         img, _ = self.create_galaxy_image(band, t_exp, seeing, airmass, zero_point, airmass_term, psf, params)
-        row_limits = np.array([params["pos_row"]-self.stamp_size[0]/2,
-                               params["pos_row"]+self.stamp_size[0]/2+1], dtype=np.int)
-        column_limits = np.array([params["pos_col"]-self.stamp_size[1]/2,
-                                  params["pos_col"]+self.stamp_size[1]/2+1], dtype=np.int)
+        row_limits = np.array([params["pos_row"]-self.stamp_size[0]//2,
+                               params["pos_row"]+self.stamp_size[0]//2 + 1], dtype=np.int)
+        column_limits = np.array([params["pos_col"]-self.stamp_size[1]//2,
+                                  params["pos_col"]+self.stamp_size[1]//2 + 1], dtype=np.int)
         if row_limits[0] < 0:
             row_limits -= row_limits[0]
         elif row_limits[1] >= self.image_size[0]:

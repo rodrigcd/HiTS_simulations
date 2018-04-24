@@ -1,3 +1,5 @@
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import numpy as np
 from ImageFactory import ImageFactory
 import h5py
@@ -13,11 +15,14 @@ class ImageDatabase(object):
 
     def __init__(self, **kwargs):
         # Path
+        print("----- Running image simulation -----")
         self.save_path = kwargs["save_path"]
+        print("Save path: "+self.save_path)
         self.output_filename = kwargs["output_filename"]
         self.bands = kwargs["bands"]
         self.galaxies_distr_path = kwargs["galaxies_distr_path"]
         self.lc_path = kwargs["lc_path"]
+        print("Light curves path: "+self.lc_path)
         self.camera_and_obs_cond = np.load(kwargs["cam_and_obs_cond_path"])
         self.camera_params = self.camera_and_obs_cond["camera_params"]
         self.obs_cond = self.camera_and_obs_cond["obs_conditions"]
@@ -33,16 +38,20 @@ class ImageDatabase(object):
         self.astrometric_error = kwargs["astrometric_error"]
         self.image_stacking_time = kwargs["image_stacking_time"]
 
+        print("- Image Factory")
         self.image_factory = ImageFactory(nx=self.stamp_size[0],
                                           ny=self.stamp_size[1],
                                           astrometric_error=self.astrometric_error,
                                           galaxies_distr_path=self.galaxies_distr_path,
                                           bands=self.bands,
                                           sky_clipping=self.sky_clipping,
-                                          ccd_parameters=self.camera_params["CCD25"])
+                                          ccd_parameters=self.camera_params["CCD25"],
+                                          real_psfs=True,
+                                          obs_cond_path=kwargs["cam_and_obs_cond_path"])
 
         self.load_obs_conditions()
         self.load_lightcurves()
+        self.reset_galaxy_counts()
         self.mag_to_counts()
         self.make_save_images()
 
@@ -75,13 +84,13 @@ class ImageDatabase(object):
             #        print("band: "+band)
             #        print(sorted_obs_cond["Field01"][key][band])
         self.obs_cond = sorted_obs_cond
-        print(type(self.obs_cond))
-        print(self.obs_cond.keys())
-        print(self.obs_cond["Field01"].keys())
-        for key in self.obs_cond["Field01"].keys():
-            print(key)
-            print(self.obs_cond["Field01"][key].keys())
-        print(self.obs_cond["Field01"]["filter"]["g"])
+        # print(type(self.obs_cond))
+        # print(self.obs_cond.keys())
+        # print(self.obs_cond["Field01"].keys())
+        # for key in self.obs_cond["Field01"].keys():
+        #     print(key)
+        #     print(self.obs_cond["Field01"][key].keys())
+        # print(self.obs_cond["Field01"]["filter"]["g"])
 
 
 
@@ -89,29 +98,33 @@ class ImageDatabase(object):
         self.data = h5py.File(self.lc_path+".hdf5", "r")
         self.lc_params = np.load(self.lc_path+".pkl")
         self.fields = list(self.data.keys())
-        print("light curve classes found")
-        data_classes = list(self.data[list(self.data.keys())[0]]["n_lc_per_type"].keys())
+        print("- Light curve classes found")
+        self.data_classes = list(self.data[list(self.data.keys())[0]]["n_lc_per_type"].keys())
         self.n_per_type = self.data[list(self.data.keys())[0]]["n_lc_per_type"]
-        print(data_classes)
-        print("n light curves found")
+        print(self.data_classes)
+        #print("n light curves found")
         self.n_lightcurves = len(list(self.data.keys()))*self.data[list(self.data.keys())[0]]["lc_id"].shape[0]
-        print(self.n_lightcurves)
+        print("- Total number of lightcurves"+str(self.n_lightcurves))
+
+    def reset_galaxy_counts(self):
+
         self.lc_with_galaxies = {}
         self.lc_with_galaxies_count = {}
         self.type_count = {}
-        for lc_type in data_classes:
+
+        for lc_type in self.data_classes:
             aux_index = self.requested_lightcurves.index(lc_type)
             n = self.n_per_type[lc_type][()]*self.prop_lightcurves_with_galaxies[aux_index]
             n = int(np.floor(n))
             aux = np.concatenate([np.ones(shape=(n,)),
                                   np.zeros(shape=(self.n_per_type[lc_type][()]-n,))],
-                                 axis=0)
+                                  axis=0)
             np.random.shuffle(aux)
             self.lc_with_galaxies[lc_type] = aux
             self.type_count[lc_type] = 0
 
     def mag_to_counts(self, sky_from_SNLS = True, save_lc=False):
-        print("From magnitudes to counts")
+        print("- From magnitudes to counts")
         self.c_lightcurves = {}
         for field in self.fields:
             self.c_lightcurves[field] = {}
@@ -130,7 +143,7 @@ class ImageDatabase(object):
     def make_save_images(self):
 
         # This version has no stacking option (for simplicity)
-        print("producing and saving images")
+        print("- Producing and Saving images")
         hdf5_file = h5py.File(self.save_path+self.output_filename+".hdf5", 'w')
         dt = h5py.special_dtype(vlen=str)
 
@@ -142,17 +155,29 @@ class ImageDatabase(object):
         image_dset = {}
         lc_dset = {}
         lc_count_dset = {}
-        for field in self.fields:
+        galaxy_dset = {}
+        psf_dset = {}
+
+        for i_field, field in enumerate(self.fields):
+            start_time = time.time()
+            print("Simulating field "+field)
+            self.reset_galaxy_counts()
+
+            for lc_type in self.data_classes:
+                self.type_count[lc_type] = 0
+
+            n_field_lightcurves = len(self.data[field]["labels"])
+
             field_group[field] = hdf5_file.create_group(name=field)
             lc_type_dataset[field] = field_group[field].create_dataset("lc_type",
-                                                                       shape=(0,),
+                                                                       data=self.data[field]["lc_type"][:],
                                                                        dtype=dt)
             labels_dataset[field] = field_group[field].create_dataset("labels",
-                                                                      shape=(0,))
+                                                                      data=self.data[field]["labels"][:])
             ids_dataset[field] = field_group[field].create_dataset("ids",
-                                                                   shape=(0,))
+                                                                   data=self.data[field]["lc_id"])
             galaxy_flag_dataset[field] = field_group[field].create_dataset("galaxy_flag",
-                                                                           shape=(0,))
+                                                                           shape=(n_field_lightcurves,))
             # Saving obs cond
             obs_group = field_group[field].create_group(name="obs_cond")
             for key1 in self.obs_cond.keys():
@@ -166,61 +191,134 @@ class ImageDatabase(object):
                                                   data=self.obs_cond[key1][key2][band])
 
             image_dset[field] = {}
+            galaxy_dset[field] = {}
+            psf_dset[field] = {}
             lc_dset[field] = {}
             lc_count_dset[field] = {}
 
             image_group = field_group[field].create_group(name="images")
+            gal_image_group = field_group[field].create_group(name="galaxy_image")
+            psf_group = field_group[field].create_group(name="psf_image")
             lc_group = field_group[field].create_group(name="lightcurves")
             lc_count_group = field_group[field].create_group(name="count_lightcurves")
 
             for band in self.bands:
-                image_dset[band] = image_group.create_dataset(name=band, shape=(0,
+
+                n_obs = len(self.data[field]["obs_days"][band])
+                image_dset[band] = image_group.create_dataset(name=band, shape=(n_field_lightcurves,
                                                                                 self.stamp_size[0],
                                                                                 self.stamp_size[1],
-                                                                                0))
-                lc_dset[band] = lc_group.create_dataset(name=band, shape=(0, 0))
-                lc_count_dset[band] = lc_count_group.create_dataset(name=band, shape=(0, 0))
-                n_saved_lightcurves = 0
-                n_field_lightcurves = self.c_lightcurves[field][band].shape[0]
-                while n_saved_lightcurves < n_field_lightcurves:
-                    upper_index = n_saved_lightcurves + self.lc_per_chunk
-                    if upper_index > n_field_lightcurves:
-                        upper_index = n_field_lightcurves
-                    current_lc = self.c_lightcurves[field][band][n_saved_lightcurves:upper_index, :]
+                                                                                n_obs))
+                galaxy_dset[band] = gal_image_group.create_dataset(name=band, shape=(n_field_lightcurves,
+                                                                                     self.stamp_size[0],
+                                                                                     self.stamp_size[1],
+                                                                                     n_obs))
+                psf_dset[band] = psf_group.create_dataset(name=band, shape=(n_field_lightcurves,
+                                                                            self.stamp_size[0],
+                                                                            self.stamp_size[1],
+                                                                            n_obs))
+                lc_dset[band] = lc_group.create_dataset(name=band, shape=(n_field_lightcurves, n_obs))
+                lc_count_dset[band] = lc_count_group.create_dataset(name=band, shape=(n_field_lightcurves, n_obs))
 
-                    #print(type(self.camera_params))
+            n_saved_lightcurves = 0
+
+            while n_saved_lightcurves < n_field_lightcurves:
+
+                image_chunk = {}
+                psf_chunk = {}
+                galaxy_image_chunk = {}
+                for band in self.bands:
+                    image_chunk[band] = []
+                    psf_chunk[band] = []
+                    galaxy_image_chunk[band] = []
+
+                upper_index = n_saved_lightcurves + self.lc_per_chunk
+
+                if upper_index > n_field_lightcurves:
+                    upper_index = n_field_lightcurves
+
+                current_types = self.data[field]["lc_type"][n_saved_lightcurves:upper_index]
+                current_params = self.lc_params[field][band][n_saved_lightcurves:upper_index]
+
+                #print(type(self.camera_params))
+
+                seeing = self.obs_cond[field]["seeing"]
+                zero_point = self.obs_cond[field]["zero_point"]
+                sky_brightness = self.obs_cond[field]["sky_brightness"]
+                exp_time = self.obs_cond[field]["exp_time"]
+
+                galaxy_flag_array = []
+
+                for lc_i in range(upper_index-n_saved_lightcurves):
+
                     random_camera = self.camera_params[random.choice(list(self.camera_params.keys()))]
-                    print(random_camera)
-
                     self.image_factory.set_ccd_params(random_camera)
-                    seeing = self.obs_cond[field]["seeing"][band]
-                    zero_point = self.obs_cond[field]["zero_point"][band]
-                    sky_brightness = self.obs_cond[field]["sky_brightness"][band]
 
-                    image, gal_image = self.image_factory.createLightCurveImages(counts=current_lc,
-                                                                                 seeing=seeing,
-                                                                                 airmass=None,
-                                                                                 sky_counts=sky_brightness,
-                                                                                 zero_point=zero_point,
-                                                                                 redshift=redshift,
-                                                                                 with_galaxy=with_galaxy)
+                    with_galaxy = self.lc_with_galaxies[current_types[lc_i]][self.type_count[current_types[lc_i]]] == 1
+                    galaxy_flag_array.append(with_galaxy)
 
-                    n_saved_lightcurves = upper_index
+                    self.type_count[current_types[lc_i]] += 1
+                    redshift = []
+                    if with_galaxy:
+                        if current_types[lc_i] == "Supernovae":
+                            redshift = np.exp(current_params[lc_i][0])  # log redshift
+                            #print(redshift)
+
+                    aux_c_lc = {}
+                    for band in self.bands:
+                        aux_c_lc[band] = self.c_lightcurves[field][band][n_saved_lightcurves:upper_index, :]
+                        aux_c_lc[band] = aux_c_lc[band][np.newaxis, lc_i, :]
+
+                    image, gal_image, psf = self.image_factory.createLightCurveImages(counts=aux_c_lc,
+                                                                                      seeing=seeing,
+                                                                                      airmass=None,
+                                                                                      sky_counts=sky_brightness,
+                                                                                      exp_time=exp_time,
+                                                                                      zero_point=zero_point,
+                                                                                      redshift=redshift,
+                                                                                      with_galaxy=with_galaxy)
+
+                    for band in self.bands:
+                        image_chunk[band].append(image[band])
+                        galaxy_image_chunk[band].append(gal_image[band])
+                        psf_chunk[band].append(psf[band])
+
+                for i_band, band in enumerate(self.bands):
+                    current_mag_lc = self.data[field]["lightcurves"][band][n_saved_lightcurves:upper_index, :]
+                    current_lc = self.c_lightcurves[field][band][n_saved_lightcurves:upper_index, :]
+                    image_chunk[band] = np.stack(image_chunk[band])
+                    if i_band == 0:
+                        print("image sequence shape for band "+band+": "+str(image_chunk[band].shape))
+                    galaxy_image_chunk[band] = np.stack(galaxy_image_chunk[band])
+                    psf_chunk[band] = np.stack(psf_chunk[band])
+
+                    image_dset[band][n_saved_lightcurves:upper_index, :, :, :] = image_chunk[band]
+                    galaxy_dset[band][n_saved_lightcurves:upper_index, :, :, :] = galaxy_image_chunk[band]
+                    psf_dset[band][n_saved_lightcurves:upper_index, :, :, :] = psf_chunk[band]
+                    lc_dset[band][n_saved_lightcurves:upper_index, :] = current_mag_lc
+                    lc_count_dset[band][n_saved_lightcurves:upper_index, :] = current_lc
+                galaxy_flag_dataset[field][n_saved_lightcurves:upper_index] = np.array(galaxy_flag_array)
+
+                n_saved_lightcurves = upper_index
+
+            field_end_time = time.time()
+            print("Elapsed time per field: "+str("%.2f" % (field_end_time-start_time))+"s")
+
 
 
 if __name__ == "__main__":
 
-    save_path = "/home/rodrigo/supernovae_detection/simulated_data/image_sequences/"
+    save_path = "/home/toshiba/rodrigo/simulated_stamps/HiTS_stamps/"
     output_filename = "wena"
     bands = ["g", ]
-    galaxy_path = "/home/rodrigo/supernovae_detection/galaxies/gal_mags_dev_exp_z_all_Filter_rodrigocd.csv"
-    lightcurves_path = "/home/rodrigo/supernovae_detection/simulated_data/lightcurves/hits_100"
+    galaxy_path = "/home/rodrigo/supernovae_detection/galaxies_guille/gal_mags_dev_exp_z_all_Filter_rodrigocd.csv"
+    lightcurves_path = "/home/toshiba/rodrigo/simulated_lightcurves/HiTS_lc/hits_50"
     camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
     requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "NonVariable", "EmptyLightCurve", "Asteroids"]
     requested_lightcurve_labels = [0, 1, 2, 3, 4, 5]  # multiclass
     stamp_size = (21, 21)
     proportion_with_galaxy = [0.5, 0.05, 0.05, 0.05, 0.5, 0]
-    lc_per_chunk = 250
+    lc_per_chunk = 120
     sky_clipping = 2000
     astrometric_error = 0.3
     image_stacking_time = 0
@@ -241,5 +339,5 @@ if __name__ == "__main__":
                              astrometric_error=astrometric_error,
                              image_stacking_time=image_stacking_time)
     end = time.time()
-    print("elapsed time: " + str(end - start))
+    print("Total elapsed time: " + str(end - start))
     print("wena")
