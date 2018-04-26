@@ -36,7 +36,7 @@ class ImageDatabase(object):
         self.sky_clipping = kwargs["estimated_sky_clipping"]
         # Light curves parameters
         self.astrometric_error = kwargs["astrometric_error"]
-        self.image_stacking_time = kwargs["image_stacking_time"]
+        # self.image_stacking_time = kwargs["image_stacking_time"]
 
         print("- Image Factory")
         self.image_factory = ImageFactory(nx=self.stamp_size[0],
@@ -180,15 +180,15 @@ class ImageDatabase(object):
                                                                            shape=(n_field_lightcurves,))
             # Saving obs cond
             obs_group = field_group[field].create_group(name="obs_cond")
-            for key1 in self.obs_cond.keys():
-                obs_feature_group = obs_group.create_group(name=key1)
-                for key2 in self.obs_cond[key1].keys():
-                    band_group = obs_feature_group.create_group(name=key2)
-                    if key2 == "filter":
-                        continue
-                    for band in self.bands:
-                        band_group.create_dataset(name=band,
-                                                  data=self.obs_cond[key1][key2][band])
+            #for key1 in self.obs_cond.keys():
+            #    obs_feature_group = obs_group.create_group(name=key1)
+            for key2 in self.obs_cond[field].keys():
+                band_group = obs_group.create_group(name=key2)
+                if key2 == "filter":
+                    continue
+                for band in self.bands:
+                    band_group.create_dataset(name=band,
+                                              data=self.obs_cond[field][key2][band])
 
             image_dset[field] = {}
             galaxy_dset[field] = {}
@@ -308,20 +308,7 @@ class ImageDatabase(object):
 
 if __name__ == "__main__":
 
-    save_path = "/home/toshiba/rodrigo/simulated_stamps/HiTS_stamps/"
-    output_filename = "wena"
-    bands = ["g", ]
-    galaxy_path = "/home/rodrigo/supernovae_detection/galaxies_guille/gal_mags_dev_exp_z_all_Filter_rodrigocd.csv"
-    lightcurves_path = "/home/toshiba/rodrigo/simulated_lightcurves/HiTS_lc/hits_50"
-    camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
-    requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "NonVariable", "EmptyLightCurve", "Asteroids"]
-    requested_lightcurve_labels = [0, 1, 2, 3, 4, 5]  # multiclass
-    stamp_size = (21, 21)
-    proportion_with_galaxy = [0.5, 0.05, 0.05, 0.05, 0.5, 0]
-    lc_per_chunk = 120
-    sky_clipping = 2000
-    astrometric_error = 0.3
-    image_stacking_time = 0
+    from config_images import *
 
     start = time.time()
     database = ImageDatabase(save_path=save_path,
@@ -336,8 +323,7 @@ if __name__ == "__main__":
                              prop_lightcurves_with_galaxies=proportion_with_galaxy,
                              lc_per_chunk=lc_per_chunk,
                              estimated_sky_clipping=sky_clipping,
-                             astrometric_error=astrometric_error,
-                             image_stacking_time=image_stacking_time)
+                             astrometric_error=astrometric_error)
     end = time.time()
     print("Total elapsed time: " + str(end - start))
     print("wena")

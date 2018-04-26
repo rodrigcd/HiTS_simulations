@@ -213,6 +213,7 @@ if __name__ == "__main__":
                                      sn_lightcurves_path=sn_lightcurves_path,
                                      sn_parameters_path=sn_parameters_path,
                                      M33_cepheids_path=M33_cepheids_path,
-                                     n_std_limmag=n_std_limmag)
+                                     n_std_limmag=n_std_limmag,
+                                     eb_path=eb_path)
 
     lc_database.generate_lightcurves(n_lightcurves_per_class_per_field=n_per_class_per_field, shuffled=True)

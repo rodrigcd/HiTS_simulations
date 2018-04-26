@@ -67,14 +67,17 @@ class EclipsingBinaries(LightCurve):
             phase = np.mod(obs_days[band]+np.random.random_sample()*period, period)*(1.0/period)
             lc = interpolation[band](phase)
             mag[band] = lc/template_g_average*mag_values["g"]
-            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12,7))
-            ax1.plot(self.templates[lc_id]["phase"], self.templates[lc_id][band], label="Real")
-            ax1.plot(self.templates[lc_id]["phase"], interpolation[band](self.templates[lc_id]["phase"]), label="Invert_real")
-            ax2.plot(obs_days[band], lc, "o")
-            ax1.legend()
-            ax1.set_title(band)
-            plt.show()
-            plt.close("all")
+
+            # fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12,7))
+            # ax1.plot(self.templates[lc_id]["phase"], self.templates[lc_id][band], label="Real")
+            # ax1.plot(self.templates[lc_id]["phase"],
+            #          interpolation[band](self.templates[lc_id]["phase"]), label="Invert_real")
+            # ax1.plot(phase, lc, "o", label="invert_sampled")
+            # ax2.plot(obs_days[band], lc, "o")
+            # ax1.legend()
+            # ax1.set_title(band)
+            # plt.show()
+            # plt.close("all")
         return mag, period
 
     def generate_lightcurves(self, n_lightcurves,  obs_days=None, distr_limits=None):
