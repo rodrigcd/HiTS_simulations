@@ -197,7 +197,7 @@ class LightCurveDatabase(object):
                     open(self.save_path + self.file_name + ".pkl", "wb"),
                     protocol=2)
 
-        #return lightcurves, labels, lc_type, parameters
+        # return lightcurves, labels, lc_type, parameters
 
 
 if __name__ == "__main__":

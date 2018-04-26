@@ -224,7 +224,7 @@ from cepheids import *
 
 if __name__ == "__main__":
 
-    cam_obs_cond = np.load("../real_obs/camera_and_obs_cond.pkl")
+    cam_obs_cond = np.load("../real_obs/pickles/camera_and_obs_cond.pkl")
     print("n available fields: "+str(len(list(cam_obs_cond["obs_conditions"].keys()))))
     obs_cond = cam_obs_cond["obs_conditions"]["Field01"]
     print(obs_cond[0].keys())
