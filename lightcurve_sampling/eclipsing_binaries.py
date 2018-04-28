@@ -66,8 +66,8 @@ class EclipsingBinaries(LightCurve):
                 raise ValueError('M33 survey does not have '+band+' band')
             phase = np.mod(obs_days[band]+np.random.random_sample()*period, period)*(1.0/period)
             lc = interpolation[band](phase)
-            mag[band] = lc/template_g_average*mag_values["g"]
-
+            # mag[band] = lc/template_g_average*mag_values["g"]
+            mag[band] = lc + (mag_values["g"]-1)
             # fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12,7))
             # ax1.plot(self.templates[lc_id]["phase"], self.templates[lc_id][band], label="Real")
             # ax1.plot(self.templates[lc_id]["phase"],

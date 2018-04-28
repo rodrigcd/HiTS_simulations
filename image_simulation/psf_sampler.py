@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from astropy.modeling import models, fitting
 from tqdm import tqdm
-
+plt.switch_backend('agg')
 
 class PSFSampler(object):
 

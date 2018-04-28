@@ -1,0 +1,17 @@
+----- Running image simulation -----
+Save path: /home/toshiba/rodrigo/simulated_stamps/HiTS_stamps/
+Light curves path: /home/toshiba/rodrigo/simulated_lightcurves/HiTS_lc/hits_2300
+- Image Factory
+- Using PSF sampler
+Doing gaussian fit to psf to compute SEEING
+- Galaxy images
+Traceback (most recent call last):
+  File "image_simulation.py", line 326, in <module>
+    astrometric_error=astrometric_error)
+  File "image_simulation.py", line 53, in __init__
+    self.load_lightcurves()
+  File "image_simulation.py", line 99, in load_lightcurves
+    self.lc_params = np.load(self.lc_path+".pkl")
+  File "/usr/lib/python3.6/site-packages/numpy/lib/npyio.py", line 372, in load
+    fid = open(file, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: '/home/toshiba/rodrigo/simulated_lightcurves/HiTS_lc/hits_2300.pkl'

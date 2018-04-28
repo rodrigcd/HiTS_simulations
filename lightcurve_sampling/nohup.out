@@ -1,0 +1,224 @@
+----- Available Light Curves -----
+Asteroids
+NonVariable
+RRLyrae
+Supernovae
+EmptyLightCurve
+Cepheids
+M33Cepheids
+EclipsingBinaries
+----- Requested Light Curves and Labels -----
+['Supernovae', 'RRLyrae', 'M33Cepheids', 'EclipsingBinaries', 'NonVariable', 'EmptyLightCurve', 'Asteroids']
+[0, 1, 2, 3, 4, 5, 6]
+Simulating for field Field01
+Sampling Supernovae light curves
+2000 Supernovae light curves generated
+lightcurves type: <class 'dict'>
+Sampling RRLyrae light curves
+2000 RRLyrae light curves generated
+Sampling M33Cepheids light curves
+2000 M33Cepheids light curves generated
+Sampling EclipsingBinaries light curves
+2000 EclipsingBinaries light curves generated
+Sampling NonVariable light curves
+2000 NonVariable light curves generated
+Sampling EmptyLightCurve light curves
+2000 EmptyLightCurve light curves generated
+Sampling Asteroids light curves
+2000 Asteroids light curves generated
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field02
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field04
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 26)
+saving light curves
+Simulating for field Field05
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field06
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field07
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field08
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field09
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 25)
+saving light curves
+Simulating for field Field10
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 25)
+saving light curves
+Simulating for field Field11
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 25)
+saving light curves
+Simulating for field Field12
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field13
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field14
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field15
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field16
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 25)
+saving light curves
+Simulating for field Field17
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 25)
+saving light curves
+Simulating for field Field18
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 26)
+saving light curves
+Simulating for field Field19
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field20
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field21
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field22
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field23
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field24
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field25
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field26
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field27
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field28
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field29
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field30
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field31
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field32
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field33
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field34
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field35
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field36
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field37
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field38
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field39
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field40
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field41
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field42
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field43
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field44
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field45
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 29)
+saving light curves
+Simulating for field Field46
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 27)
+saving light curves
+Simulating for field Field47
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field48
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 26)
+saving light curves
+Simulating for field Field49
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Simulating for field Field50
+lightcurves type: <class 'dict'>
+lightcurves shape: (14000, 28)
+saving light curves
+Total number of lightcurves per class: 98000
+Total number of lightcurves: 686000
