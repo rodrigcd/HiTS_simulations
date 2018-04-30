@@ -278,6 +278,7 @@ class ImageDatabase(object):
                                                                                       redshift=redshift,
                                                                                       with_galaxy=with_galaxy)
 
+
                     for band in self.bands:
                         image_chunk[band].append(image[band])
                         galaxy_image_chunk[band].append(gal_image[band])

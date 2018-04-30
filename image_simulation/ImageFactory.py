@@ -115,7 +115,7 @@ class ImageFactory:
             x_mean, y_mean = np.random.multivariate_normal([0, 0], cov, counts[band].shape[1]).T
             band_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="int")
             band_gal_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="int")
-            band_psf_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="int")
+            band_psf_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="float32")
             for i in range(counts[band].shape[1]):
                 mean = [x_mean[i], y_mean[i]]
                 if airmass is None:
@@ -131,7 +131,7 @@ class ImageFactory:
                 band_psf_image[..., i] = psf[:]
             images[band] = band_image
             gal_image[band] = band_gal_image
-            psf_image[band] = band_gal_image
+            psf_image[band] = band_psf_image
         return images, gal_image, psf_image
 
 
