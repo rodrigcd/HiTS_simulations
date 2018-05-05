@@ -55,6 +55,9 @@ class PSFSampler(object):
                 #plt.show()
         self.psf_seeing_xy = np.stack(self.psf_seeing_xy, axis=0)
         self.psf_seeing = np.mean(self.psf_seeing_xy, axis=1)
+        ordered_index = np.argsort(self.psf_seeing)
+        self.psf_seeing = self.psf_seeing[ordered_index]
+        self.ordered_psfs = self.psfs[..., ordered_index]
         bins = np.linspace(3, 10, 70)
         h_seeing, _ = np.histogram(self.psf_seeing, bins=bins, density=True)
         plt.figure(figsize=(12, 7))
@@ -68,7 +71,8 @@ class PSFSampler(object):
         diff_seeing = np.abs(self.psf_seeing - seeing)
         best_seeing_index = np.argmin(diff_seeing)
         best_seeing_match = self.psf_seeing[best_seeing_index]
-        best_psf = self.psfs[..., best_seeing_index]
+        best_seeing_index += np.random.randint(low=-1, high=2) #randomizing a little
+        best_psf = self.ordered_psfs[..., best_seeing_index]
         psf_to_return = np.copy(best_psf)
 
         if random_rotation:

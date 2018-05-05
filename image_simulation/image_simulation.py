@@ -278,7 +278,6 @@ class ImageDatabase(object):
                                                                                       redshift=redshift,
                                                                                       with_galaxy=with_galaxy)
 
-
                     for band in self.bands:
                         image_chunk[band].append(image[band])
                         galaxy_image_chunk[band].append(gal_image[band])
@@ -292,7 +291,6 @@ class ImageDatabase(object):
                         print("image sequence shape for band "+band+": "+str(image_chunk[band].shape))
                     galaxy_image_chunk[band] = np.stack(galaxy_image_chunk[band])
                     psf_chunk[band] = np.stack(psf_chunk[band])
-
                     image_dset[band][n_saved_lightcurves:upper_index, :, :, :] = image_chunk[band]
                     galaxy_dset[band][n_saved_lightcurves:upper_index, :, :, :] = galaxy_image_chunk[band]
                     psf_dset[band][n_saved_lightcurves:upper_index, :, :, :] = psf_chunk[band]

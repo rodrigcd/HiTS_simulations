@@ -52,6 +52,8 @@ class ImageFactory:
         """each input is just a scalar"""
         if self.real_psfs:
             psf, _ = self.psf_sampler.sample_psf(seeing)
+            #print(seeing)
+            #print(psf)
             data = np.copy(psf)
         else:
             # seeing to sigmas
