@@ -1,0 +1,571 @@
+----- Running image simulation -----
+Save path: /home/rcarrasco/simulated_data/image_sequences/
+Light curves path: /home/rcarrasco/simulated_data/lightcurves/brighter_hits_2500
+- Image Factory
+- Using PSF sampler
+Doing gaussian fit to psf to compute SEEING
+- Galaxy images
+- Light curve classes found
+['Asteroids', 'EclipsingBinaries', 'EmptyLightCurve', 'M33Cepheids', 'NonVariable', 'RRLyrae', 'Supernovae']
+- Total number of lightcurves857500
+- From magnitudes to counts
+- Producing and Saving images
+Simulating field Field01
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1076.15s
+Simulating field Field02
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1023.06s
+Simulating field Field04
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (1500, 21, 21, 26)
+Elapsed time per field: 980.44s
+Simulating field Field05
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1028.33s
+Simulating field Field06
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1021.32s
+Simulating field Field07
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1009.85s
+Simulating field Field08
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1004.79s
+Simulating field Field09
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (1500, 21, 21, 25)
+Elapsed time per field: 962.52s
+Simulating field Field10
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (1500, 21, 21, 25)
+Elapsed time per field: 964.26s
+Simulating field Field11
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (1500, 21, 21, 25)
+Elapsed time per field: 959.32s
+Simulating field Field12
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1046.83s
+Simulating field Field13
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1042.50s
+Simulating field Field14
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1053.47s
+Simulating field Field15
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1043.66s
+Simulating field Field16
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (1500, 21, 21, 25)
+Elapsed time per field: 998.18s
+Simulating field Field17
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (2000, 21, 21, 25)
+image sequence shape for band g: (1500, 21, 21, 25)
+Elapsed time per field: 1004.00s
+Simulating field Field18
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (1500, 21, 21, 26)
+Elapsed time per field: 1019.08s
+Simulating field Field19
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1057.23s
+Simulating field Field20
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1069.64s
+Simulating field Field21
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1070.69s
+Simulating field Field22
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1050.37s
+Simulating field Field23
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1063.48s
+Simulating field Field24
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1051.21s
+Simulating field Field25
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1078.53s
+Simulating field Field26
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1072.89s
+Simulating field Field27
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1065.95s
+Simulating field Field28
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1078.85s
+Simulating field Field29
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1077.88s
+Simulating field Field30
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1097.67s
+Simulating field Field31
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1106.05s
+Simulating field Field32
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1065.29s
+Simulating field Field33
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1102.24s
+Simulating field Field34
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1104.02s
+Simulating field Field35
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1111.31s
+Simulating field Field36
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1049.79s
+Simulating field Field37
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1046.45s
+Simulating field Field38
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1096.46s
+Simulating field Field39
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1089.19s
+Simulating field Field40
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1102.65s
+Simulating field Field41
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1081.06s
+Simulating field Field42
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1097.38s
+Simulating field Field43
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1100.11s
+Simulating field Field44
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1055.14s
+Simulating field Field45
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (2000, 21, 21, 29)
+image sequence shape for band g: (1500, 21, 21, 29)
+Elapsed time per field: 1113.07s
+Simulating field Field46
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (2000, 21, 21, 27)
+image sequence shape for band g: (1500, 21, 21, 27)
+Elapsed time per field: 1059.80s
+Simulating field Field47
+image sequence shape for band g: (2000, 21, 21, 28)/home/rcarrasco/HiTS_simulations/image_simulation/Galaxies.py:113: RuntimeWarning: invalid value encountered in true_divide
+  np.sum(band_profile["img1"] + band_profile["img2"])
+/home/rcarrasco/HiTS_simulations/image_simulation/ImageFactory.py:94: RuntimeWarning: invalid value encountered in less
+  data = np.random.poisson(np.clip(data, a_min=0, a_max=None))
+/home/rcarrasco/HiTS_simulations/image_simulation/ImageFactory.py:94: RuntimeWarning: invalid value encountered in greater
+  data = np.random.poisson(np.clip(data, a_min=0, a_max=None))
+
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1087.86s
+Simulating field Field48
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (2000, 21, 21, 26)
+image sequence shape for band g: (1500, 21, 21, 26)
+Elapsed time per field: 1032.87s
+Simulating field Field49
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+SAMPLING GALAXY FOR SECOND TIME!! :O
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1078.89s
+Simulating field Field50
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (2000, 21, 21, 28)
+image sequence shape for band g: (1500, 21, 21, 28)
+Elapsed time per field: 1080.29s
+Total elapsed time: 51764.43939471245
+wena

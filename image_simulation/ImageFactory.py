@@ -91,7 +91,7 @@ class ImageFactory:
         # from counts to e
         data = data*self.gain
         # add Poisson noise e-
-        data = np.random.poisson(data)
+        data = np.random.poisson(np.clip(data, a_min=0, a_max=None))
 
         # add readout noise e- (Gaussian)
         data += np.random.normal(scale=self.readout_noise, size=data.shape).astype(int)
