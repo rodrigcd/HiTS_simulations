@@ -131,7 +131,7 @@ class EclipsingBinaries(LightCurve):
                 lc = interpolation[band](phase)
                 # mag[band] = lc/template_g_average*mag_values["g"]
                 mag[band] = lc + (mag_values["g"]-1)
-
+            # print(type(mag), type(self.limmag), type(self.zero_point))
             if right_eb_criteria(mag["g"], self.limmag["g"], self.zero_point["g"]):
                 self.right_eb_count += 1
                 break
@@ -150,11 +150,14 @@ class EclipsingBinaries(LightCurve):
                     plt.close("all")
         return mag, period
 
-    def generate_lightcurves(self, n_lightcurves,  obs_days=None, distr_limits=None):
+    def generate_lightcurves(self, n_lightcurves,  obs_days=None, distr_limits=None, limmag=None, zero_point=None):
         if not obs_days:
             obs_days = self.observation_days
         if distr_limits:
             self.mag_generator.set_extrapolation_limits(distr_limits)
+        self.limmag = limmag
+        self.zero_point = zero_point
+
         lightcurves = {}
         params = {}
         lightcurves = {}

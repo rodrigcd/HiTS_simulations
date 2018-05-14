@@ -1,12 +1,12 @@
 # Absolute paths
 # Hayabusa
-# sn_lightcurves_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcurves_100000.pkl"
-# sn_parameters_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params_100000.pkl"
-# save_path = "/home/toshiba/rodrigo/simulated_lightcurves/HiTS_lc/"
+sn_lightcurves_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcurves_100000.pkl"
+sn_parameters_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params_100000.pkl"
+save_path = "/home/toshiba/rodrigo/simulated_lightcurves/HiTS_lc/"
 # Personal
-sn_lightcurves_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcurves.pkl"
-sn_parameters_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params.pkl"
-save_path = "/home/rodrigo/supernovae_detection/simulated_data/lightcurves/"
+# sn_lightcurves_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_lightcurves.pkl"
+# sn_parameters_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params.pkl"
+# save_path = "/home/rodrigo/supernovae_detection/simulated_data/lightcurves/"
 
 # Configuration Variables
 # requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",

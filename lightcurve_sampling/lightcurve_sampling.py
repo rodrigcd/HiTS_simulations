@@ -114,12 +114,17 @@ class LightCurveDatabase(object):
                                                                      distr_limits=extrapolation_limits,
                                                                      field=field,
                                                                      limmag=limmag)
-                else:
+                elif class_name == "EclipsingBinaries":
                     lc, params = lightcurve_obj.generate_lightcurves(n_lightcurves=n_lc,
                                                                      obs_days=obs_days,
                                                                      distr_limits=extrapolation_limits,
                                                                      zero_point=zero_point,
                                                                      limmag=limmag)
+                else:
+                    lc, params = lightcurve_obj.generate_lightcurves(n_lightcurves=n_lc,
+                                                                     obs_days=obs_days,
+                                                                     distr_limits=extrapolation_limits)
+
                 lightcurves_list.append(lc)
                 parameters_list.append(params)
                 # print(type(params["g"]))
