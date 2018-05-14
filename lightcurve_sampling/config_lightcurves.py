@@ -9,12 +9,14 @@ sn_parameters_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_
 save_path = "/home/rodrigo/supernovae_detection/simulated_data/lightcurves/"
 
 # Configuration Variables
-requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
-                        "NonVariable", "EmptyLightCurve", "Asteroids"]
-requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
-file_name = "hits_"
+# requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
+#                         "NonVariable", "EmptyLightCurve", "Asteroids"]
+requested_lightcurve = ["EclipsingBinaries"]
+# requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
+requested_lightcurve_labels = [4,]
+file_name = "good_EB_"
 bands = ["g", ]
-n_per_class_per_field = 30
+n_per_class_per_field = 2500
 n_std_limmag = 0.7  # How deep you want to sample the magnitudes for sampling
 file_name = file_name + str(n_per_class_per_field)
 

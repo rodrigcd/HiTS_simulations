@@ -23,25 +23,29 @@ class LightCurveDatabase(object):
         # ------ Just to initialize light curves objects, hardcoded :( ------
         field01_days = []
         field01_limmag = []
+        field01_zp = []
         self.field_list = list(self.camera_and_obs_cond["obs_conditions"].keys())
         field01 = self.camera_and_obs_cond["obs_conditions"]["Field01"]
         for epoch in field01:
             field01_days.append(epoch["obs_day"])
             field01_limmag.append(epoch["limmag5"])
+            field01_zp.append(epoch["zero_point"])
 
         ordered_index = np.argsort(field01_days)
         field01_days = np.array(field01_days)[ordered_index]
         field01_limmag = np.array(field01_limmag)[ordered_index]
+        field01_zp = np.array(field01_zp)[ordered_index]
         # Standard extrapolation limits
         shift_limit = -1
-        extrapolation_limits = {'g': [19, 25.602089154033994 + shift_limit],
-                                'r': [19, 25.029324900291915 + shift_limit],
-                                'i': [19, 24.45150161567846 + shift_limit],
-                                'z': [19, 23.122699702058064 + shift_limit]}
+        extrapolation_limits = {'g': [15, 25.602089154033994 + shift_limit],
+                                'r': [15, 25.029324900291915 + shift_limit],
+                                'i': [15, 24.45150161567846 + shift_limit],
+                                'z': [15, 23.122699702058064 + shift_limit]}
         kwargs["observation_days"] = field01_days
         kwargs["load_distr"] = True
         kwargs["extrapolation_limit"] = extrapolation_limits
         kwargs["limmag"] = field01_limmag
+        kwargs["zero_point"] = field01_zp
 
         print("----- Available Light Curves -----")
         for cls in self.available_lightcurves:
@@ -75,19 +79,23 @@ class LightCurveDatabase(object):
             obs_cond = self.camera_and_obs_cond["obs_conditions"][field]
             obs_days = {"g": [], "r": [], "i": []}
             limmag = {"g": [], "r": [], "i": []}
+            zero_point = {"g": [], "r": [], "i": []}
             extrapolation_limits = {}
 
             for epoch in obs_cond:
                 obs_days[epoch["filter"]].append(epoch["obs_day"])
                 limmag[epoch["filter"]].append(epoch["limmag5"])
+                zero_point[epoch["filter"]].append(epoch["zero_point"])
 
             for band in self.bands:
                 obs_days[band] = np.array(obs_days[band])
                 limmag[band] = np.array(limmag[band])
+                zero_point[band] = np.array(zero_point[band])
                 ordered_index = np.argsort(obs_days[band])
                 obs_days[band] = obs_days[band][ordered_index]
                 limmag[band] = limmag[band][ordered_index]
-                extrapolation_limits[band] = [19, np.mean(limmag[band]) + np.std(limmag[band])*self.n_std_limmag]
+                zero_point[band] = zero_point[band][ordered_index]
+                extrapolation_limits[band] = [15, np.mean(limmag[band]) + np.std(limmag[band])*self.n_std_limmag]
 
             lightcurves_list = []
             parameters_list = []
@@ -109,7 +117,9 @@ class LightCurveDatabase(object):
                 else:
                     lc, params = lightcurve_obj.generate_lightcurves(n_lightcurves=n_lc,
                                                                      obs_days=obs_days,
-                                                                     distr_limits=extrapolation_limits)
+                                                                     distr_limits=extrapolation_limits,
+                                                                     zero_point=zero_point,
+                                                                     limmag=limmag)
                 lightcurves_list.append(lc)
                 parameters_list.append(params)
                 # print(type(params["g"]))
