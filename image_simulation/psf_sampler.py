@@ -22,7 +22,7 @@ class PSFSampler(object):
 
         fit_p = fitting.LevMarLSQFitter()
 
-        self.psf_seeing_xy = [] # [x, y]
+        self.psf_seeing_xy = [] # [x, y]EB_set_good_EB_2500.hdf5
         for i in range(self.psfs.shape[2]):
             p_init = models.Gaussian2D(amplitude=np.mean(self.psfs[..., i]), x_mean=0.0, y_mean=0,
                                        x_stddev=1.9, y_stddev=1.9)
@@ -72,6 +72,10 @@ class PSFSampler(object):
         best_seeing_index = np.argmin(diff_seeing)
         best_seeing_match = self.psf_seeing[best_seeing_index]
         best_seeing_index += np.random.randint(low=-1, high=2) #randomizing a little
+        if best_seeing_index >= self.ordered_psfs.shape[1]:
+            best_seeing_index = self.ordered_psfs.shape[1]-1
+        elif best_seeing_index < 0:
+            best_seeing_index = 0
         best_psf = self.ordered_psfs[..., best_seeing_index]
         psf_to_return = np.copy(best_psf)
 

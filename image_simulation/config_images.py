@@ -13,20 +13,22 @@
 save_path = "/home/rcarrasco/simulated_data/image_sequences/"
 galaxy_path = "/home/rcarrasco/simulated_data/galaxies/gal_mags_dev_exp_z_all_Filter_rodrigocd.csv"
 lightcurves_path = "/home/rcarrasco/simulated_data/lightcurves/"
-lightcurve_name = "brighter_smallset_hits_50"
+lightcurve_name = "fixed_eb_psf2500"
 lightcurves_path = lightcurves_path + lightcurve_name
 
 # Configuration Variables
 requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
                         "NonVariable", "EmptyLightCurve", "Asteroids"]
+#requested_lightcurve = ["EclipsingBinaries"]
 requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
+#requested_lightcurve_labels = [3,]
 bands = ["g", ]
 stamp_size = (21, 21)
 proportion_with_galaxy = [0.5, 0.05, 0.05, 0.05, 0.05, 1.0, 0]
 lc_per_chunk = 2000
 sky_clipping = 2000
 astrometric_error = 0.3
-output_filename = "small_set"
+output_filename = "may16"
 output_filename = output_filename + "_" + lightcurve_name
 
 # Don't worry about this

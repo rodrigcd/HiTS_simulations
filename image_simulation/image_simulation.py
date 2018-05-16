@@ -70,6 +70,8 @@ class ImageDatabase(object):
 
             for epoch in epoch_list:
                 for key in epoch_keys:
+                    #if key == "seeing":
+                        # print(epoch["seeing"])
                     sorted_obs_cond[field][key][epoch["filter"]].append(epoch[key])
             for band in self.bands:
                 sorted_index = np.argsort(sorted_obs_cond[field]["obs_day"][band])
@@ -189,6 +191,8 @@ class ImageDatabase(object):
                 for band in self.bands:
                     band_group.create_dataset(name=band,
                                               data=self.obs_cond[field][key2][band])
+                    if key2 == "seeing":
+                        print(self.obs_cond[field][key2][band])
 
             image_dset[field] = {}
             galaxy_dset[field] = {}

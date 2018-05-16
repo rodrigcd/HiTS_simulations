@@ -114,7 +114,8 @@ class ImageFactory:
             self.galaxies_gen.sample_galaxy(redshift=redshift)
 
         for band in self.bands:
-            x_mean, y_mean = np.random.multivariate_normal([0, 0], cov, counts[band].shape[1]).T
+            # x_mean, y_mean = np.random.multivariate_normal([0, 0], cov, counts[band].shape[1]).T
+            x_mean, y_mean = np.random.uniform(low=-0.5, high=0.5, size=(2, counts[band].shape[1]))
             band_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="int")
             band_gal_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="int")
             band_psf_image = np.zeros((self.nx, self.ny, counts[band].shape[1]), dtype="float32")

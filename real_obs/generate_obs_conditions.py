@@ -27,7 +27,7 @@ class ObsConditions(object):
             self.collect_psf()
             self.read_fields()
             self.save_data()
-            self.surveysim_data()
+            # self.surveysim_data()
 
     def get_zero_points(self):
         zp_list = glob.glob(self.zero_points_path+"psm*")
@@ -112,6 +112,8 @@ class ObsConditions(object):
                         aux_dict[self.obs_conditions_keys[i]] = str(info_array[key])[2]
                     elif key == "SEEING":
                         aux_dict[self.obs_conditions_keys[i]] = np.float(info_array[key])/pixel_scale
+                        print(np.float(info_array[key])/pixel_scale)
+
                         #print(aux_dict[self.obs_conditions_keys[i]])
                     else:
                         aux_dict[self.obs_conditions_keys[i]] = np.float(info_array[key])
