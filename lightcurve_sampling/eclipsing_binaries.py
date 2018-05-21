@@ -134,6 +134,9 @@ class EclipsingBinaries(LightCurve):
             # print(type(mag), type(self.limmag), type(self.zero_point))
             if right_eb_criteria(mag["g"], self.limmag["g"], self.zero_point["g"]):
                 self.right_eb_count += 1
+                new_mag = self.mag_generator.sample(1)
+                for band in self.bands:
+                    mag[band] = mag[band]-mag_values["g"]+new_mag["g"] 
                 break
 
                 plot_lc = False
