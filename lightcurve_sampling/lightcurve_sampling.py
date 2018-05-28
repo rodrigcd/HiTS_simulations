@@ -19,6 +19,8 @@ class LightCurveDatabase(object):
         self.n_std_limmag = kwargs["n_std_limmag"]
         self.camera_and_obs_cond_path = kwargs["camera_and_obs_cond_path"]
         self.camera_and_obs_cond = np.load(self.camera_and_obs_cond_path)
+        self.mag_upper_limit = kwargs["mag_upper_limit"]
+        self.mag_lower_limit = kwargs["mag_lower_limit"]
 
         # ------ Just to initialize light curves objects, hardcoded :( ------
         field01_days = []
@@ -37,15 +39,16 @@ class LightCurveDatabase(object):
         field01_zp = np.array(field01_zp)[ordered_index]
         # Standard extrapolation limits
         shift_limit = -1
-        extrapolation_limits = {'g': [15, 25.602089154033994 + shift_limit],
-                                'r': [15, 25.029324900291915 + shift_limit],
-                                'i': [15, 24.45150161567846 + shift_limit],
-                                'z': [15, 23.122699702058064 + shift_limit]}
+        extrapolation_limits = {'g': [self.mag_upper_limit, 25.602089154033994 + shift_limit],
+                                'r': [self.mag_upper_limit, 25.029324900291915 + shift_limit],
+                                'i': [self.mag_upper_limit, 24.45150161567846 + shift_limit],
+                                'z': [self.mag_upper_limit, 23.122699702058064 + shift_limit]}
         kwargs["observation_days"] = field01_days
         kwargs["load_distr"] = True
         kwargs["extrapolation_limit"] = extrapolation_limits
         kwargs["limmag"] = field01_limmag
         kwargs["zero_point"] = field01_zp
+
 
         print("----- Available Light Curves -----")
         for cls in self.available_lightcurves:
@@ -64,6 +67,7 @@ class LightCurveDatabase(object):
                 continue
 
     def generate_lightcurves(self, n_lightcurves_per_class_per_field, shuffled=True):
+        """Magnitude limits should be initialized with values per band"""
         unique_labels, labels_counts = np.unique(self.requested_lightcurves_labels,
                                                  return_counts=True)
 
@@ -71,8 +75,6 @@ class LightCurveDatabase(object):
         field_parameters = {}
         for i_field, field in enumerate(self.field_list):
             print("Simulating for field "+field)
-            # if field == "Field04":
-            #   continue
 
             field_group = hdf5_file.create_group(field)
 
@@ -105,6 +107,12 @@ class LightCurveDatabase(object):
 
             for i, lightcurve_obj in enumerate(self.lightcurve_objects):
                 class_name = lightcurve_obj.__class__.__name__
+
+                # Lower magnitude limit (lower brightness)
+                if class_name in list(self.mag_lower_limit.keys()):
+                    for band in self.bands:
+                        print("Custom limits for " + class_name)
+                        extrapolation_limits[band] = [self.mag_upper_limit, self.mag_lower_limit[class_name]]
 
                 n_same_label = labels_counts[unique_labels == self.requested_lightcurves_labels[i]]
                 n_lc = int(np.round(np.true_divide(n_lightcurves_per_class_per_field, n_same_label)))
@@ -212,7 +220,12 @@ class LightCurveDatabase(object):
                     open(self.save_path + self.file_name + ".pkl", "wb"),
                     protocol=2)
 
-        # return lightcurves, labels, lc_type, parameters
+    def plot_distribution(self):
+        sim_data = h5py.File(self.save_path + self.file_name + ".hdf5", "r")
+        fields = list(sim_data.keys())
+        for field in fields:
+            lc_types = sim_data[field]["lc_type"][:]
+            print(field, lc_types[:10])
 
 
 if __name__ == "__main__":
@@ -229,6 +242,10 @@ if __name__ == "__main__":
                                      sn_parameters_path=sn_parameters_path,
                                      M33_cepheids_path=M33_cepheids_path,
                                      n_std_limmag=n_std_limmag,
-                                     eb_path=eb_path)
+                                     eb_path=eb_path,
+                                     mag_upper_limit=magnitude_upper_limit,
+                                     mag_lower_limit=magnitude_lower_limit)
 
-    lc_database.generate_lightcurves(n_lightcurves_per_class_per_field=n_per_class_per_field, shuffled=True)
+    # lc_database.generate_lightcurves(n_lightcurves_per_class_per_field=n_per_class_per_field, shuffled=True)
+
+    lc_database.

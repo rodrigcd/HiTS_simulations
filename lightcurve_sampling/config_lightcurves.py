@@ -13,16 +13,19 @@ sn_parameters_path = "/home/rcarrasco/simulated_data/pickles/hits_params_100000.
 save_path = "/home/rcarrasco/simulated_data/lightcurves/"
 
 # Configuration Variables
-# requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
-#                         "NonVariable", "EmptyLightCurve", "Asteroids"]
-requested_lightcurve = ["EclipsingBinaries"]
-# requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
-requested_lightcurve_labels = [3, ]
-file_name = "best_eb_ever"
+requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
+                        "NonVariable", "EmptyLightCurve", "Asteroids"]
+# requested_lightcurve = ["EclipsingBinaries"]
+requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
+# requested_lightcurve_labels = [3, ]
+file_name = "custom_distr"
 bands = ["g", ]
-n_per_class_per_field = 2500
+n_per_class_per_field = 200
 n_std_limmag = 0.7  # How deep you want to sample the magnitudes for sampling
 file_name = file_name + str(n_per_class_per_field)
+
+magnitude_upper_limit = 14.5
+magnitude_lower_limit = {"RRLyrae": 22.7, "M33Cepheids": 23.5}
 
 # Don't worry about this
 camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
