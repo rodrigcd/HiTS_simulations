@@ -7,7 +7,6 @@ import astropy.modeling.models as models
 import itertools
 import matplotlib.pyplot as plt
 
-# TODO: Order by field and get the photometry using psf from images
 class ImagePhotometry(object):
 
     def __init__(self, **kwargs):
@@ -30,7 +29,7 @@ class ImagePhotometry(object):
         #self.estimate_sky_from_images()
 
 
-    def get_lightcurve(self, image_seq, gal_seq, psf, mask, sky, sky_variance):
+    def get_lightcurve(self, image_seq, gal_seq, psf, mask, sky, sky_variance, good_quality_points=None):
         """
         :param image_seq: (21, 21, time)
         :param gal_seq:  (21, 21, time)
@@ -39,12 +38,17 @@ class ImagePhotometry(object):
         :param sky:  (time)
         :return:
         """
+        if good_quality_points is None:
+            good_quality_points = np.ones(shape=sky.shape).astype(bool)
+
         estimated_lightcurve = []
         variance = []
         clean_source_values = []
         residuals = np.zeros(shape=(21, 21, len(sky)))
         clean_image = image_seq - gal_seq - sky
-        for time_index in range(len(sky)):
+        valid_time_index = np.where(good_quality_points==True)[0]
+
+        for time_index in valid_time_index:
             current_source_image = clean_image[:, :, time_index]
             current_psf = psf[..., time_index]
             current_mask = mask[..., time_index]
@@ -121,6 +125,7 @@ class ImagePhotometry(object):
             images = image_field_data["images"][band][:]
             gal_images = image_field_data["galaxy_image"][band][:]
             psf_image = image_field_data["psf_image"][band][:]
+            good_quality_points = image_field_data["obs_cond"]["good_quality_points"][band][:]
             sky_field, var_field = self.estimate_sky_from_images(field)
             mask, _ = self.get_apperture_mask(field_group["obs_cond"]["seeing"][band][:])
             #print("images: "+str(images.shape))
@@ -153,11 +158,31 @@ class ImagePhotometry(object):
         print(file_name + " done in " + str(np.round(end-start, decimals=2)) + " sec")
         return
 
+    def filter_by_conditions(self, output_filename, condition_limits):
+        hdf5_file = h5py.File(self.save_path + output_filename + ".hdf5", 'r+')
+        fields = list(hdf5_file.keys())
+
+        for field in fields:
+            obs_cond_group = hdf5_file[field]["obs_cond"]
+            if "good_quality_points" in list(obs_cond_group.keys()):
+                del obs_cond_group["good_quality_points"]
+            point_quality_gruop = obs_cond_group.create_group(name="good_quality_points")
+            for band in self.bands:
+                good_quality_points = np.ones(shape=obs_cond_group["obs_day"][band][:].shape)
+                print("Filtering " + field + " band " +band +" with "+str(len(good_quality_points))+" points")
+                for key, value in condition_limits.items():
+                    cond = obs_cond_group[key][band][:]
+                    cond_quality_points = np.logical_and(cond > value[band][0], cond < value[band][1])
+                    good_quality_points = np.logical_and(good_quality_points, cond_quality_points)
+                print(str(np.sum(good_quality_points)) + " points after filtering")
+                point_quality_gruop.create_dataset(name=band, data=good_quality_points)
+
 if __name__ == "__main__":
-    image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_may30_erf_distr2500.hdf5"
+    image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_june1_erf_distr2500.hdf5"
     camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
     save_path = "/home/rcarrasco/simulated_data/image_sequences/lightcurves_from_images/"
-    file_name = "photometry_may30"
+    file_name = "photometry"
+    file_name = image_path.split("/")[-1].split(".")[0] + file_name
     bands = ["g",]
     chunk_size = 100
     times_seeing = 2.0*(1/(2*np.sqrt(2*np.log(2)))) # This is 2 sigma
@@ -169,4 +194,7 @@ if __name__ == "__main__":
                                  chunk_size=chunk_size,
                                  times_seeing=times_seeing)
 
+    filter_by_conditions = {"seeing": {"g": [0, 2.0 / 0.27]}}  # fitler obs condition by range (seeing in pixels)
+
     photometry.run_photometry(output_filename=file_name, band="g")
+    photometry.filter_by_conditions(output_fileame=file_name)

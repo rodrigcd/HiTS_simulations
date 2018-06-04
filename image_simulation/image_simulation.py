@@ -39,12 +39,12 @@ class ImageDatabase(object):
         self.astrometric_error = kwargs["astrometric_error"]
         # self.image_stacking_time = kwargs["image_stacking_time"]
 
-        #self.load_obs_conditions()
-        #self.load_image_factory()
-        #self.load_lightcurves()
-        #self.reset_galaxy_counts()
-        #self.mag_to_counts()
-        #self.make_save_images()
+        self.load_obs_conditions()
+        self.load_image_factory()
+        self.load_lightcurves()
+        self.reset_galaxy_counts()
+        self.mag_to_counts()
+        self.make_save_images()
 
     def load_image_factory(self):
         print("- Image Factory")
