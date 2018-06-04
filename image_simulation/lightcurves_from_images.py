@@ -148,16 +148,16 @@ class ImagePhotometry(object):
             residuals = np.stack(residuals, axis=0)
             field_group.create_dataset("estimated_count_lc", data=estimated_lc)
             field_group.create_dataset("estimated_count_variance", data=estimated_variance)
-            field_group.create_dataset("residuals", data=residuals)
+            # field_group.create_dataset("residuals", data=residuals)
         end = time.time()
         print(file_name + " done in " + str(np.round(end-start, decimals=2)) + " sec")
         return
 
 if __name__ == "__main__":
-    image_path = "/home/rcarrasco/simulated_data/image_sequences/may23_bck.hdf5"
+    image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_may30_erf_distr2500.hdf5"
     camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
     save_path = "/home/rcarrasco/simulated_data/image_sequences/lightcurves_from_images/"
-    file_name = "testing_phot"
+    file_name = "photometry_may30"
     bands = ["g",]
     chunk_size = 100
     times_seeing = 2.0*(1/(2*np.sqrt(2*np.log(2)))) # This is 2 sigma

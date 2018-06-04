@@ -23,6 +23,7 @@ class ImageDatabase(object):
         self.galaxies_distr_path = kwargs["galaxies_distr_path"]
         self.lc_path = kwargs["lc_path"]
         print("Light curves path: "+self.lc_path)
+        self.camera_and_obs_cond_path = kwargs["cam_and_obs_cond_path"]
         self.camera_and_obs_cond = np.load(kwargs["cam_and_obs_cond_path"])
         self.camera_params = self.camera_and_obs_cond["camera_params"]
         self.obs_cond = self.camera_and_obs_cond["obs_conditions"]
@@ -38,6 +39,14 @@ class ImageDatabase(object):
         self.astrometric_error = kwargs["astrometric_error"]
         # self.image_stacking_time = kwargs["image_stacking_time"]
 
+        #self.load_obs_conditions()
+        #self.load_image_factory()
+        #self.load_lightcurves()
+        #self.reset_galaxy_counts()
+        #self.mag_to_counts()
+        #self.make_save_images()
+
+    def load_image_factory(self):
         print("- Image Factory")
         self.image_factory = ImageFactory(nx=self.stamp_size[0],
                                           ny=self.stamp_size[1],
@@ -47,13 +56,7 @@ class ImageDatabase(object):
                                           sky_clipping=self.sky_clipping,
                                           ccd_parameters=self.camera_params["CCD25"],
                                           real_psfs=True,
-                                          obs_cond_path=kwargs["cam_and_obs_cond_path"])
-
-        self.load_obs_conditions()
-        self.load_lightcurves()
-        self.reset_galaxy_counts()
-        self.mag_to_counts()
-        self.make_save_images()
+                                          obs_cond_path=self.camera_and_obs_cond_path)
 
     def load_obs_conditions(self):
         # This part is horrible, I'm sorry
@@ -307,6 +310,24 @@ class ImageDatabase(object):
             field_end_time = time.time()
             print("Elapsed time per field: "+str("%.2f" % (field_end_time-start_time))+"s")
 
+    def filter_by_conditions(self, condition_limits):
+        hdf5_file = h5py.File(self.save_path + self.output_filename + ".hdf5", 'r+')
+        fields = list(hdf5_file.keys())
+
+        for field in fields:
+            obs_cond_group = hdf5_file[field]["obs_cond"]
+            if "good_quality_points" in list(obs_cond_group.keys()):
+                del obs_cond_group["good_quality_points"]
+            point_quality_gruop = obs_cond_group.create_group(name="good_quality_points")
+            for band in self.bands:
+                good_quality_points = np.ones(shape=obs_cond_group["obs_day"][band][:].shape)
+                print("Filtering " + field + " band " +band +" with "+str(len(good_quality_points))+" points")
+                for key, value in condition_limits.items():
+                    cond = obs_cond_group[key][band][:]
+                    cond_quality_points = np.logical_and(cond > value[band][0], cond < value[band][1])
+                    good_quality_points = np.logical_and(good_quality_points, cond_quality_points)
+                print(str(np.sum(good_quality_points)) + " points after filtering")
+                point_quality_gruop.create_dataset(name=band, data=good_quality_points)
 
 
 if __name__ == "__main__":
@@ -327,6 +348,7 @@ if __name__ == "__main__":
                              lc_per_chunk=lc_per_chunk,
                              estimated_sky_clipping=sky_clipping,
                              astrometric_error=astrometric_error)
+    database.filter_by_conditions(filter_by_conditions)
     end = time.time()
     print("Total elapsed time: " + str(end - start))
     print("wena")

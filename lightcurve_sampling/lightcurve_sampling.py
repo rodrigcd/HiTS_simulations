@@ -3,7 +3,8 @@ from lightcurves import LightCurve
 import pickle
 import sys
 import h5py
-
+import matplotlib.pyplot as plt
+from scipy.special import erf
 
 class LightCurveDatabase(object):
 
@@ -21,6 +22,8 @@ class LightCurveDatabase(object):
         self.camera_and_obs_cond = np.load(self.camera_and_obs_cond_path)
         self.mag_upper_limit = kwargs["mag_upper_limit"]
         self.mag_lower_limit = kwargs["mag_lower_limit"]
+        self.erf_limits = kwargs["erf_limit"]
+        self.standard_erf_limit = kwargs["standard_erf_limit"]
 
         # ------ Just to initialize light curves objects, hardcoded :( ------
         field01_days = []
@@ -60,6 +63,10 @@ class LightCurveDatabase(object):
         self.lightcurve_objects = []
         for requested_name in self.requested_lightcurves:
             if requested_name in self.available_lightcurves_names:
+                if requested_name in self.erf_limits.keys():
+                    kwargs["erf_limit"] = self.erf_limits[requested_name]
+                else:
+                    kwargs["erf_limit"] = self.standard_erf_limit
                 index = self.available_lightcurves_names.index(requested_name)
                 self.lightcurve_objects.append(self.available_lightcurves[index](**kwargs))
             else:
@@ -97,7 +104,7 @@ class LightCurveDatabase(object):
                 obs_days[band] = obs_days[band][ordered_index]
                 limmag[band] = limmag[band][ordered_index]
                 zero_point[band] = zero_point[band][ordered_index]
-                extrapolation_limits[band] = [15, np.mean(limmag[band]) + np.std(limmag[band])*self.n_std_limmag]
+                extrapolation_limits[band] = [self.mag_upper_limit, np.mean(limmag[band]) + np.std(limmag[band])*self.n_std_limmag]
 
             lightcurves_list = []
             parameters_list = []
@@ -113,10 +120,13 @@ class LightCurveDatabase(object):
                     for band in self.bands:
                         print("Custom limits for " + class_name)
                         extrapolation_limits[band] = [self.mag_upper_limit, self.mag_lower_limit[class_name]]
+                else:
+                    for band in self.bands:
+                        extrapolation_limits[band] = [self.mag_upper_limit, np.mean(limmag[band]) + np.std(limmag[band])*self.n_std_limmag]
 
                 n_same_label = labels_counts[unique_labels == self.requested_lightcurves_labels[i]]
                 n_lc = int(np.round(np.true_divide(n_lightcurves_per_class_per_field, n_same_label)))
-                if class_name == "Supernovae":
+                if class_name in ["TypeISupernovae", "TypeIISupernovae", "Supernovae"] :
                     lc, params = lightcurve_obj.generate_lightcurves(n_lightcurves=n_lc,
                                                                      obs_days=obs_days,
                                                                      distr_limits=extrapolation_limits,
@@ -223,10 +233,34 @@ class LightCurveDatabase(object):
     def plot_distribution(self):
         sim_data = h5py.File(self.save_path + self.file_name + ".hdf5", "r")
         fields = list(sim_data.keys())
+        mag_dict = {}
+        for cl in self.requested_lightcurves:
+            if cl == "EmptyLightCurve":
+                continue
+            mag_dict[cl] = []
         for field in fields:
             lc_types = sim_data[field]["lc_type"][:]
-            print(field, lc_types[:10])
+            for i, t in enumerate(lc_types):
+                if t == "EmptyLightCurve":
+                    continue
+                elif t in ["asteroids", "TypeIISupernovae", "TypeISupernovae", "Supernovae"]:
+                    mag_dict[t].append(np.amin(sim_data[field]["lightcurves"]["g"][i, ...]))
+                else:
+                    mag_dict[t].append(np.mean(sim_data[field]["lightcurves"]["g"][i, ...]))
+        bins = np.arange(start=14.5, stop=26, step=0.1)
+        for key in list(mag_dict.keys()):
+            h, _ = np.histogram(mag_dict[key], bins=bins, density=True)
+            #if key == "RRLyrae":
+            #    print("blablbal")
+            #    h = h*(1-erf(bins[1:]-21.5))
+            #elif key != "Supernovae":
+            #    h = h*(1-erf(bins[1:]-22.8))
+            plt.plot(bins[1:], h, label=key)
 
+        plt.title("Magnitude Distribution")
+        plt.xlabel("magnitude")
+        plt.legend()
+        plt.show()
 
 if __name__ == "__main__":
 
@@ -238,14 +272,18 @@ if __name__ == "__main__":
                                      save_path=save_path,
                                      bands=bands,
                                      camera_and_obs_cond_path=camera_and_obs_cond_path,
-                                     sn_lightcurves_path=sn_lightcurves_path,
-                                     sn_parameters_path=sn_parameters_path,
+                                     type2_sn_lc_path=type2_sn_lc_path,
+                                     type2_sn_params_path=type2_params_path,
+                                     type1_sn_lc_path=type1_sn_lc_path,
+                                     type1_sn_params_path=type1_params_path,
                                      M33_cepheids_path=M33_cepheids_path,
                                      n_std_limmag=n_std_limmag,
                                      eb_path=eb_path,
                                      mag_upper_limit=magnitude_upper_limit,
-                                     mag_lower_limit=magnitude_lower_limit)
+                                     mag_lower_limit=magnitude_lower_limit,
+                                     erf_limit=custom_erf_limit,
+                                     standard_erf_limit=standard_erf_limit)
 
-    # lc_database.generate_lightcurves(n_lightcurves_per_class_per_field=n_per_class_per_field, shuffled=True)
+    lc_database.generate_lightcurves(n_lightcurves_per_class_per_field=n_per_class_per_field, shuffled=True)
 
-    lc_database.
+    lc_database.plot_distribution()

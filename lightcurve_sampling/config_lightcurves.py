@@ -8,8 +8,14 @@
 # sn_parameters_path = "/home/rodrigo/supernovae_detection/surveysim/pickles/hits_params.pkl"
 # save_path = "/home/rodrigo/supernovae_detection/simulated_data/lightcurves/"
 # Cluster
-sn_lightcurves_path = "/home/rcarrasco/simulated_data/pickles/hits_lightcurves_100000.pkl"
-sn_parameters_path = "/home/rcarrasco/simulated_data/pickles/hits_params_100000.pkl"
+# sn_lightcurves_path = "/home/rcarrasco/simulated_data/from_surveysim/hits_lightcurves_100000.pkl"
+# sn_parameters_path = "/home/rcarrasco/simulated_data/from_surveysim/hits_params_100000.pkl"
+
+
+type1_sn_lc_path = "/home/rcarrasco/surveysim/pickles/Hsiao_hits_20000_lc.pkl"
+type1_params_path = "/home/rcarrasco/surveysim/pickles/Hsiao_hits_20000_params.pkl"
+type2_sn_lc_path = "/home/rcarrasco/surveysim/pickles/mid_bounded_lowz_20000_lc.pkl"
+type2_params_path = "/home/rcarrasco/surveysim/pickles/mid_bounded_lowz_20000_params.pkl"
 save_path = "/home/rcarrasco/simulated_data/lightcurves/"
 
 # Configuration Variables
@@ -18,14 +24,17 @@ requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinari
 # requested_lightcurve = ["EclipsingBinaries"]
 requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
 # requested_lightcurve_labels = [3, ]
-file_name = "custom_distr"
+file_name = "erf_distr"
 bands = ["g", ]
-n_per_class_per_field = 200
+n_per_class_per_field = 2500
 n_std_limmag = 0.7  # How deep you want to sample the magnitudes for sampling
 file_name = file_name + str(n_per_class_per_field)
 
 magnitude_upper_limit = 14.5
-magnitude_lower_limit = {"RRLyrae": 22.7, "M33Cepheids": 23.5}
+#magnitude_lower_limit = {"RRLyrae": 22.7, "M33Cepheids": 23.5}
+magnitude_lower_limit = {}
+standard_erf_limit = {"g": 22.8}
+custom_erf_limit = {"RRLyrae": {"g": 21.5}}
 
 # Don't worry about this
 camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
