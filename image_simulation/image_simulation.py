@@ -39,12 +39,12 @@ class ImageDatabase(object):
         self.astrometric_error = kwargs["astrometric_error"]
         # self.image_stacking_time = kwargs["image_stacking_time"]
 
-        self.load_obs_conditions()
-        self.load_image_factory()
-        self.load_lightcurves()
-        self.reset_galaxy_counts()
-        self.mag_to_counts()
-        self.make_save_images()
+        #self.load_obs_conditions()
+        #self.load_image_factory()
+        #self.load_lightcurves()
+        #self.reset_galaxy_counts()
+        #self.mag_to_counts()
+        #self.make_save_images()
 
     def load_image_factory(self):
         print("- Image Factory")
@@ -329,6 +329,25 @@ class ImageDatabase(object):
                 print(str(np.sum(good_quality_points)) + " points after filtering")
                 point_quality_gruop.create_dataset(name=band, data=good_quality_points)
 
+        hdf5_file.close()
+
+    def generate_flux_conversion(self):
+        hdf5_file = h5py.File(self.save_path + self.output_filename + ".hdf5", 'r+')
+        fields = list(hdf5_file.keys())
+
+        for field in fields:
+            obs_cond_group = hdf5_file[field]["obs_cond"]
+            if "flux_conversion" in list(obs_cond_group.keys()):
+                del obs_cond_group["flux_conversion"]
+            conversion_group = obs_cond_group.create_group(name="flux_conversion")
+            for band in self.bands:
+                band_zp = obs_cond_group["zero_point"][band][:]
+                reference_zp = band_zp[0]
+                flux_conversion = np.power(10, (reference_zp - band_zp)/2.5)
+                print(flux_conversion)
+                conversion_group.create_dataset(name=band, data=flux_conversion)
+
+        hdf5_file.close()
 
 if __name__ == "__main__":
 
@@ -348,7 +367,9 @@ if __name__ == "__main__":
                              lc_per_chunk=lc_per_chunk,
                              estimated_sky_clipping=sky_clipping,
                              astrometric_error=astrometric_error)
+
     database.filter_by_conditions(filter_by_conditions)
+    database.generate_flux_conversion()
     end = time.time()
     print("Total elapsed time: " + str(end - start))
     print("wena")

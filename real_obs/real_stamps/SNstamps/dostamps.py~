@@ -1,0 +1,10 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+SHAREDDIR = "/home/apps/astro/data/SHARED"
+
+
+df = pd.read_csv("SNHiTS.txt", sep = "\s+")
+
+print(df.SNname)

@@ -194,7 +194,8 @@ if __name__ == "__main__":
                                  chunk_size=chunk_size,
                                  times_seeing=times_seeing)
 
-    filter_by_conditions = {"seeing": {"g": [0, 2.0 / 0.27]}}  # fitler obs condition by range (seeing in pixels)
+    filter_by_conditions = {"seeing": {"g": [0, 2.0 / 0.27]},
+                            "zero_point": {"g": [24.9, 25.15]}}  # fitler obs condition by range (seeing in pixels)
 
-    photometry.run_photometry(output_filename=file_name, band="g")
-    photometry.filter_by_conditions(output_fileame=file_name)
+    # photometry.run_photometry(output_filename=file_name, band="g")
+    photometry.filter_by_conditions(output_filename=file_name, condition_limits=filter_by_conditions)

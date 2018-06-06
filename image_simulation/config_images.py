@@ -31,7 +31,8 @@ astrometric_error = 0.3
 output_filename = "complete_june1"
 output_filename = output_filename + "_" + lightcurve_name
 
-filter_by_conditions = {"seeing":{"g": [0, 2.0/0.27]}} #fitler obs condition by range (seeing in pixels)
+filter_by_conditions = {"seeing": {"g": [0, 2.0 / 0.27]},
+                        "zero_point": {"g": [24.9, 25.15]}}
 
 # Don't worry about this
 camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
