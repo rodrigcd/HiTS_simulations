@@ -66,11 +66,11 @@ class ImageFactory:
             psf = np.copy(data)
         # insert gaussian
         # data = np.round(data*counts/data.sum()).astype(int)
-        data = np.floor(data*counts/np.sum(data))
+        data = np.round(data*counts/np.sum(data))
         # print("counts: "+ str(counts))
         # print("integral of psf: " + str(np.sum(data)))
         # estimated_sky_counts = 4*np.pi*(sigma**2)*sky_counts
-        data += np.floor(np.amin([sky_counts, self.sky_clipping]))
+        data += np.round(np.amin([sky_counts, self.sky_clipping]))
         # adding galaxy
         if self.with_galaxy:
             if self.real_psfs:
@@ -98,7 +98,7 @@ class ImageFactory:
         # from e- to counts
         data = data/self.gain
         data = np.clip(data, 0, self.pixel_saturation)
-        data = np.floor(data)
+        data = np.round(data, decimals=0)
         data.astype(int)
         return data, galaxy_image, psf
 

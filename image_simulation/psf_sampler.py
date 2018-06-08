@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from astropy.modeling import models, fitting
 from tqdm import tqdm
-plt.switch_backend('agg')
+#plt.switch_backend('agg')
 
 class PSFSampler(object):
 
@@ -12,7 +12,7 @@ class PSFSampler(object):
         self.cam_obs_cond_path = kwargs["camera_and_obs_cond_path"]
         self.psfs = np.load(self.cam_obs_cond_path)["psf"]
         self.nx, self.ny, self.n_psfs = self.psfs.shape
-        self.psf_match()
+        self.psf_match(plot_n_examples=0)
 
     def psf_match(self, plot_n_examples=20):
         print("Doing gaussian fit to psf to compute SEEING")
@@ -25,7 +25,7 @@ class PSFSampler(object):
         self.psf_seeing_xy = [] # [x, y]EB_set_good_EB_2500.hdf5
         for i in range(self.psfs.shape[2]):
             p_init = models.Gaussian2D(amplitude=np.mean(self.psfs[..., i]), x_mean=0.0, y_mean=0,
-                                       x_stddev=1.9, y_stddev=1.9)
+                                       x_stddev=1.7, y_stddev=1.7)
 
             with warnings.catch_warnings():
                 # Ignore model linearity warning from the fitter
@@ -72,8 +72,8 @@ class PSFSampler(object):
         best_seeing_index = np.argmin(diff_seeing)
         best_seeing_match = self.psf_seeing[best_seeing_index]
         best_seeing_index += np.random.randint(low=-1, high=2) #randomizing a little
-        if best_seeing_index >= self.ordered_psfs.shape[1]:
-            best_seeing_index = self.ordered_psfs.shape[1]-1
+        if best_seeing_index >= self.ordered_psfs.shape[-1]:
+            best_seeing_index = self.ordered_psfs.shape[-1]-1
         elif best_seeing_index < 0:
             best_seeing_index = 0
         best_psf = self.ordered_psfs[..., best_seeing_index]
@@ -99,8 +99,7 @@ if __name__ == "__main__":
     test_seeings = [4.13, 4.98, 5.373, 4.5, 4.42, 5.01]
     for i, seeing in enumerate(test_seeings):
         psf, real_s = sampler.sample_psf(seeing)
-
-        plt.imshow(psf)
-        plt.title("real_s: "+str(real_s)+", requested s: "+str(seeing))
-        plt.savefig("plots/psf_match/sample_example"+str(i)+".png")
-        plt.close("all")
+    #     plt.imshow(psf)
+    #     plt.title("real_s: "+str(real_s)+", requested s: "+str(seeing))
+    #     plt.savefig("plots/psf_match/sample_example"+str(i)+".png")
+    #     plt.close("all")
