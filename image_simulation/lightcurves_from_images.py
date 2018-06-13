@@ -17,7 +17,7 @@ class ImagePhotometry(object):
         self.chunk_size = kwargs["chunk_size"]
         self.times_seeing = kwargs["times_seeing"]
 
-        self.image_data = h5py.File(self.image_path, "r")
+        self.image_data = h5py.File(self.image_path, "r+")
         self.fields = list(self.image_data.keys())
 
         self.cam_params = np.load(self.obs_condition_path)["camera_params"]
@@ -77,7 +77,7 @@ class ImagePhotometry(object):
         self.readout_noise = self.readout_noise/np.float(n_cams)
         self.gain = self.gain/np.float(n_cams)
 
-    def estimate_sky_from_images(self, field):
+    def estimate_sky_from_images(self, field, n_images=1000):
         field_data = self.image_data[field]
         field_images = field_data["images"]
         sky_from_data = field_data["obs_cond"]["sky_brightness"]["g"][:]
@@ -86,7 +86,7 @@ class ImagePhotometry(object):
         for time in range(sky_from_data.shape[0]):
             time_sky = 0
             pixel_array = []
-            for i in range(1000):
+            for i in range(n_images):
                 pixel_array.append(field_images["g"][i, :, 0, time])
             pixel_array = np.concatenate(pixel_array, axis=0)
             #print(pixel_array.shape)
@@ -117,6 +117,15 @@ class ImagePhotometry(object):
         for field in self.fields:
             print("Running "+field)
             field_group = output_file.create_group(name=field)
+
+            image_field_group = self.image_data[field]
+            if "estimated_counts" in list(image_field_group.keys()):
+                del image_field_group["estimated_counts"]
+            if "estimated_error_counts" in list(image_field_group.keys()):
+                del image_field_group["estimated_error_counts"]
+            count_group = image_field_group.create_group("estimated_counts")
+            error_gruop = image_field_group.create_group("estimated_error_counts")
+
             image_field_data = self.image_data[field]
             for group_name in self.gruops_to_copy:
                 image_field_data.copy(group_name, field_group)
@@ -126,7 +135,7 @@ class ImagePhotometry(object):
             gal_images = image_field_data["galaxy_image"][band][:]
             psf_image = image_field_data["psf_image"][band][:]
             good_quality_points = image_field_data["obs_cond"]["good_quality_points"][band][:]
-            sky_field, var_field = self.estimate_sky_from_images(field)
+            sky_field, var_field = self.estimate_sky_from_images(field, n_images=300)
             mask, _ = self.get_apperture_mask(field_group["obs_cond"]["seeing"][band][:])
             #print("images: "+str(images.shape))
             #print("gal: "+str(gal_images.shape))n
@@ -153,6 +162,8 @@ class ImagePhotometry(object):
             residuals = np.stack(residuals, axis=0)
             field_group.create_dataset("estimated_count_lc", data=estimated_lc)
             field_group.create_dataset("estimated_count_variance", data=estimated_variance)
+            count_group.create_dataset(band, data=estimated_lc)
+            error_gruop.create_dataset(band, data=estimated_variance)
             # field_group.create_dataset("residuals", data=residuals)
         end = time.time()
         print(file_name + " done in " + str(np.round(end-start, decimals=2)) + " sec")
@@ -178,7 +189,9 @@ class ImagePhotometry(object):
                 point_quality_gruop.create_dataset(name=band, data=good_quality_points)
 
 if __name__ == "__main__":
-    image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_june1_erf_distr2500.hdf5"
+    image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_june8_erf_distr2500.hdf5"
+    #image_path = "/home/rcarrasco/simulated_data/image_sequences/small_may30_erf_distr50.hdf5"
+ 
     camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
     save_path = "/home/rcarrasco/simulated_data/image_sequences/lightcurves_from_images/"
     file_name = "photometry"
@@ -194,8 +207,7 @@ if __name__ == "__main__":
                                  chunk_size=chunk_size,
                                  times_seeing=times_seeing)
 
-    filter_by_conditions = {"seeing": {"g": [0, 2.0 / 0.27]},
-                            "zero_point": {"g": [24.9, 25.15]}}  # fitler obs condition by range (seeing in pixels)
+    filter_by_conditions = {"seeing": {"g": [0, 2.0 / 0.27]}}  # fitler obs condition by range (seeing in pixels)
 
-    # photometry.run_photometry(output_filename=file_name, band="g")
-    photometry.filter_by_conditions(output_filename=file_name, condition_limits=filter_by_conditions)
+    photometry.run_photometry(output_filename=file_name, band="g")
+    # photometry.filter_by_conditions(output_filename=file_name, condition_limits=filter_by_conditions)
