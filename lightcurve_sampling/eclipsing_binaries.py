@@ -67,6 +67,15 @@ def right_eb_criteria(eb_lightcurve, limmag, zero_point):
     else:
         return False
 
+def std_detection(eb_lightcurve):
+    min_eclipses = [6, 10] # hardcoded
+    mag = eb_lightcurve
+    if np.sum(np.abs(mag-np.mean(mag))>np.std(mag))>int(np.random.uniform(low=min_eclipses[0],
+                                                                          high=min_eclipses[1])):
+        return True
+    else:
+        return False
+
 def templates_to_pickle():
     path = "./lc_data/EB_templates"
     lc_templates = sorted(listdir(path))
@@ -126,13 +135,14 @@ class EclipsingBinaries(LightCurve):
                     mag[band] = np.array([])
                     continue
                 if not (band in self.av_bands):
-                    raise ValueError('M33 survey does not have '+band+' band')
+                    raise ValueError('EB does not have '+band+' band')
                 phase = np.mod(obs_days[band]+np.random.random_sample()*period, period)*(1.0/period)
                 lc = interpolation[band](phase)
                 # mag[band] = lc/template_g_average*mag_values["g"]
                 mag[band] = lc + (mag_values["g"]-1)
             # print(type(mag), type(self.limmag), type(self.zero_point))
-            if right_eb_criteria(mag["g"], self.limmag["g"], self.zero_point["g"]):
+            #if right_eb_criteria(mag["g"], self.limmag["g"], self.zero_point["g"]):
+            if std_detection(mag["g"]):
                 self.right_eb_count += 1
                 new_mag = self.mag_generator.sample(1)
                 for band in self.bands:

@@ -37,6 +37,7 @@ class ImageDatabase(object):
         self.sky_clipping = kwargs["estimated_sky_clipping"]
         # Light curves parameters
         self.astrometric_error = kwargs["astrometric_error"]
+        self.augmented_psfs = kwargs["augmented_psf"]
         # self.image_stacking_time = kwargs["image_stacking_time"]
 
         self.load_obs_conditions()
@@ -56,7 +57,8 @@ class ImageDatabase(object):
                                           sky_clipping=self.sky_clipping,
                                           ccd_parameters=self.camera_params["CCD25"],
                                           real_psfs=True,
-                                          obs_cond_path=self.camera_and_obs_cond_path)
+                                          obs_cond_path=self.camera_and_obs_cond_path,
+                                          augmented_psfs=self.augmented_psfs)
 
     def load_obs_conditions(self):
         # This part is horrible, I'm sorry
@@ -366,7 +368,8 @@ if __name__ == "__main__":
                              prop_lightcurves_with_galaxies=proportion_with_galaxy,
                              lc_per_chunk=lc_per_chunk,
                              estimated_sky_clipping=sky_clipping,
-                             astrometric_error=astrometric_error)
+                             astrometric_error=astrometric_error,
+                             augmented_psf=augmented_psfs)
 
     database.filter_by_conditions(filter_by_conditions)
     database.generate_flux_conversion()

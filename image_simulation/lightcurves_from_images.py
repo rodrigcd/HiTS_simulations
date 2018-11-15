@@ -136,6 +136,7 @@ class ImagePhotometry(object):
             psf_image = image_field_data["psf_image"][band][:]
             good_quality_points = image_field_data["obs_cond"]["good_quality_points"][band][:]
             sky_field, var_field = self.estimate_sky_from_images(field, n_images=300)
+            sky_field = image_field_data["obs_cond"]["sky_brightness"][band][:]
             mask, _ = self.get_apperture_mask(field_group["obs_cond"]["seeing"][band][:])
             #print("images: "+str(images.shape))
             #print("gal: "+str(gal_images.shape))n
@@ -189,12 +190,14 @@ class ImagePhotometry(object):
                 point_quality_gruop.create_dataset(name=band, data=good_quality_points)
 
 if __name__ == "__main__":
-    image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_june8_erf_distr2500.hdf5"
+    image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_aug22_moredet2500.hdf5"
+    #image_path = "/home/rcarrasco/simulated_data/image_sequences/psf_aug_july27_erf_distr2500.hdf5"
+    #image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_june8_erf_distr2500.hdf5"
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/small_may30_erf_distr50.hdf5"
  
     camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
     save_path = "/home/rcarrasco/simulated_data/image_sequences/lightcurves_from_images/"
-    file_name = "photometry"
+    file_name = "more_detections"
     file_name = image_path.split("/")[-1].split(".")[0] + file_name
     bands = ["g",]
     chunk_size = 100

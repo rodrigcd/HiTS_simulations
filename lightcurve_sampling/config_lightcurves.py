@@ -19,12 +19,12 @@ type2_params_path = "/home/rcarrasco/surveysim/pickles/mid_bounded_lowz_20000_pa
 save_path = "/home/rcarrasco/simulated_data/lightcurves/"
 
 # Configuration Variables
-requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
-                        "NonVariable", "EmptyLightCurve", "Asteroids"]
-# requested_lightcurve = ["EclipsingBinaries"]
-requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
-# requested_lightcurve_labels = [3, ]
-file_name = "erf_distr"
+# requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
+#                         "NonVariable", "EmptyLightCurve", "Asteroids"]
+requested_lightcurve = ["EclipsingBinaries"]
+# requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
+requested_lightcurve_labels = [3, ]
+file_name = "eb_more_detections"
 bands = ["g", ]
 n_per_class_per_field = 2500
 n_std_limmag = 0.7  # How deep you want to sample the magnitudes for sampling

@@ -18,7 +18,8 @@ class ImageFactory:
         self.real_psfs = kwargs["real_psfs"]
         if self.real_psfs:
             print("- Using PSF sampler")
-            self.psf_sampler = PSFSampler(camera_and_obs_cond_path=kwargs["obs_cond_path"])
+            self.psf_sampler = PSFSampler(camera_and_obs_cond_path=kwargs["obs_cond_path"],
+                                          augmented_psfs=kwargs["augmented_psfs"])
         else:
             self.airmass_terms = kwargs["airmass_term"]
 

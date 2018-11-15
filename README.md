@@ -32,7 +32,7 @@ camera_obs_cond["camera_params"].keys() = ['CCD25', 'CCD52', 'CCD86', 'CCD54', .
 camera_obs_cond["camera_params"]["CCD25"] = {'ccd_num': 25,
  					     'gain': 4.104, #[e-/ADU]
  					     'read_noise': 6.119064, #[e-]
- 					     'saturation': 40469.0, #[e-]
+ 					     'saturation': 40469.0, #[ADU]
 					     'pixel_scale': 0.27, #[arcsec/pixel]
  					     'zp_g': 25.399156, #camera zero point not used
  					     'zp_i': 25.313254,
