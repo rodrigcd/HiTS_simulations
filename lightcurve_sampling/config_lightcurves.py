@@ -20,14 +20,15 @@ save_path = "/home/rcarrasco/simulated_data/lightcurves/"
 
 # Configuration Variables
 # requested_lightcurve = ["Supernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
-#                         "NonVariable", "EmptyLightCurve", "Asteroids"]
-requested_lightcurve = ["EclipsingBinaries"]
-# requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6]  # multiclass
-requested_lightcurve_labels = [3, ]
-file_name = "eb_more_detections"
-bands = ["g", ]
-n_per_class_per_field = 2500
-n_std_limmag = 0.7  # How deep you want to sample the magnitudes for sampling
+requested_lightcurve = ["TypeISupernovae", "TypeIISupernovae", "RRLyrae", "M33Cepheids", "EclipsingBinaries",
+                        "NonVariable", "EmptyLightCurve", "Asteroids"]
+# requested_lightcurve = ["EclipsingBinaries"]
+requested_lightcurve_labels = [0, 1, 2, 3, 4, 5, 6, 7]  # multiclass
+# requested_lightcurve_labels = [3, ]
+file_name = "for_thesis"
+bands = ["g", "r", "i"]
+n_per_class_per_field = 100
+n_std_limmag = 0.7  # How deep you want to sample the magnitudes
 file_name = file_name + str(n_per_class_per_field)
 
 magnitude_upper_limit = 14.5
