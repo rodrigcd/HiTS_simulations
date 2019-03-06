@@ -46,6 +46,7 @@ class M33Cepheids(LightCurve):
         stats = self.lc_gps["stats"][lc_id]
         mag_values = self.mag_generator.sample(1)
         mag = {}
+        random_shift = np.random.random_sample()
         for band in self.bands:
             if len(obs_days[band]) == 0:
                 mag[band] = np.array([])
@@ -53,7 +54,7 @@ class M33Cepheids(LightCurve):
                 continue
             if not (band in self.av_bands):
                 raise ValueError('M33 survey does not have '+band+' band')
-            phase = np.mod(obs_days[band]+np.random.random_sample()*period, period)*(1.0/period)
+            phase = np.mod(obs_days[band]+random_shift*period, period)*(1.0/period)
             lc = gp[band].predict(X=phase[:, np.newaxis])#, return_cov=True)#, n_samples=1, random_state=randint(0, 10000))
             mag[band] = lc*stats[band][1] + mag_values[band][0] #+ np.random.normal(loc=0, scale=np.sqrt(np.diag(cov)))*0.1
         return mag, period

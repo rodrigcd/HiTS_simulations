@@ -89,8 +89,9 @@ class RRLyrae(LightCurve):
         gen = RRLyraeGenerated(lcid, random_state=random_state_int)
         mag = {}
         error = np.clip(self.kde_sampler.sample(n_samples=1)[0, 0], a_min=0.011, a_max=None)
+        random_shift = np.random.random_sample()
         for band in self.bands:
-            mag[band] = gen.generated(band, obs_days[band]+np.random.random_sample()*period, err=error)
+            mag[band] = gen.generated(band, obs_days[band]+random_shift*period, err=error)
         return mag, period
 
     def generate_lightcurves(self, n_lightcurves, re_sampled=True, obs_days=None, distr_limits=None):

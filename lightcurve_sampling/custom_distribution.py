@@ -67,7 +67,7 @@ class MagnitudeDistribution(object):
             pickle.dump(self.coef_per_band, f)
 
     def load_coef(self):
-        self.coef_per_band = np.load("lc_data/distr_coef.pkl")
+        self.coef_per_band = np.load("../lc_data/distr_coef.pkl")
 
     def set_extrapolation_limits(self, limits):
         self.extrapolation_limit = limits
@@ -75,11 +75,13 @@ class MagnitudeDistribution(object):
     def sample(self, n_samples):
         samples = {}
         n_sample_condition = {}
+        sample_count = 0
         for band in self.bands:
-            sample_count = 0
             samples[band] = []
-            while sample_count < n_samples:
-                n_sample_condition[band] = False
+        while sample_count < n_samples:
+            for i, band in enumerate(self.bands):
+                if i == 0:
+                    random_number = np.random.uniform(0, 1)
                 mag_range = self.extrapolation_limit[band]
                 coef = self.coef_per_band[band]
                 x_range = np.linspace(mag_range[0], mag_range[1], 200)
@@ -88,16 +90,22 @@ class MagnitudeDistribution(object):
                 Fn_inv = np.vectorize(lambda x: ((coef[0] + 1) / np.exp(coef[1]) * x) ** (1 / (coef[0] + 1)))
 
                 multiplier = Fn(mag_range[1]) - Fn(mag_range[0])
-                band_samples = Fn_inv(np.random.uniform(0, 1) * multiplier + Fn(mag_range[0]))
-                if self.reject_by_erf(band_samples, band):
-                    sample_count += 1
-                    samples[band].append(band_samples)
+                band_samples = Fn_inv((random_number+np.random.uniform(0,0.07))* multiplier + Fn(mag_range[0]))
+                if band == "g":
+                    if self.reject_by_erf(band_samples, band):
+                        sample_count += 1
+                        samples[band].append(band_samples.item())
+                    else:
+                        break
+                else:
+                    samples[band].append(band_samples.item())
             #samples[band] = np.sort(band_samples)
-            samples[band] = np.sort(np.array(samples[band]))
-        shuffled_index = np.arange(0, len(samples[self.bands[0]]), step=1)
-        np.random.shuffle(shuffled_index)
-        for band in self.bands:
-            samples[band] = samples[band][shuffled_index]
+        #for band in self.bands:
+        #    samples[band] = np.sort(np.array(samples[band]))
+        #shuffled_index = np.arange(0, len(samples[self.bands[0]]), step=1)
+        #np.random.shuffle(shuffled_index)
+        #for band in self.bands:
+        #    samples[band] = samples[band][shuffled_index]
         return samples
 
     def reject_by_erf(self, magnitude, band):

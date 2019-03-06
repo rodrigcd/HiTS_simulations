@@ -130,13 +130,14 @@ class EclipsingBinaries(LightCurve):
 
             mag_values = self.mag_generator.sample(1)
             mag = {}
+            random_shift = np.random.random_sample()
             for band in self.bands:
                 if len(obs_days[band]) == 0:
                     mag[band] = np.array([])
                     continue
                 if not (band in self.av_bands):
                     raise ValueError('EB does not have '+band+' band')
-                phase = np.mod(obs_days[band]+np.random.random_sample()*period, period)*(1.0/period)
+                phase = np.mod(obs_days[band]+np.random_shift*period, period)*(1.0/period)
                 lc = interpolation[band](phase)
                 # mag[band] = lc/template_g_average*mag_values["g"]
                 mag[band] = lc + (mag_values["g"]-1)

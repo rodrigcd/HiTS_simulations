@@ -1,5 +1,5 @@
     
-# Image Sequence Simulator for HiTS Survey
+# Image Sequence Simulator for ZTF and HiTS
 
 Python code designed to simulate light curves and sequence of images for a certain observation plan and telescope. In this case it is for the HiTS Survey (link), but it will be generalized for other surveys.
 
