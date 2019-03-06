@@ -68,7 +68,7 @@ def right_eb_criteria(eb_lightcurve, limmag, zero_point):
         return False
 
 def std_detection(eb_lightcurve):
-    min_eclipses = [6, 10] # hardcoded
+    min_eclipses = [1, 5] # hardcoded
     mag = eb_lightcurve
     if np.sum(np.abs(mag-np.mean(mag))>np.std(mag))>int(np.random.uniform(low=min_eclipses[0],
                                                                           high=min_eclipses[1])):
@@ -137,7 +137,7 @@ class EclipsingBinaries(LightCurve):
                     continue
                 if not (band in self.av_bands):
                     raise ValueError('EB does not have '+band+' band')
-                phase = np.mod(obs_days[band]+np.random_shift*period, period)*(1.0/period)
+                phase = np.mod(obs_days[band]+random_shift*period, period)*(1.0/period)
                 lc = interpolation[band](phase)
                 # mag[band] = lc/template_g_average*mag_values["g"]
                 mag[band] = lc + (mag_values["g"]-1)
@@ -167,6 +167,8 @@ class EclipsingBinaries(LightCurve):
     def generate_lightcurves(self, n_lightcurves,  obs_days=None, distr_limits=None, limmag=None, zero_point=None):
         if not obs_days:
             obs_days = self.observation_days
+        elif len(obs_days)==0:
+            return [array([]) for i in range(n_lightcurves)]
         if distr_limits:
             self.mag_generator.set_extrapolation_limits(distr_limits)
         self.limmag = limmag

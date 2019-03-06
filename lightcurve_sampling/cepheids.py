@@ -62,6 +62,9 @@ class M33Cepheids(LightCurve):
     def generate_lightcurves(self, n_lightcurves,  obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        elif len(obs_days)==0:
+            return [array([]) for i in range(n_lightcurves)]
+
         if distr_limits:
             self.mag_generator.set_extrapolation_limits(distr_limits)
         lightcurves = {}

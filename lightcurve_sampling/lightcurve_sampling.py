@@ -142,7 +142,6 @@ class LightCurveDatabase(object):
                     lc, params = lightcurve_obj.generate_lightcurves(n_lightcurves=n_lc,
                                                                      obs_days=obs_days,
                                                                      distr_limits=extrapolation_limits)
-
                 lightcurves_list.append(lc)
                 parameters_list.append(params)
                 # print(type(params["g"]))
@@ -182,8 +181,10 @@ class LightCurveDatabase(object):
                 label_index.append(np.where(labels == label)[0])
             shuffled_index = np.concatenate(label_index, axis=0)
             np.random.shuffle(shuffled_index)
-
-            print("lightcurves shape: "+str(lightcurves["g"].shape))
+            
+            print("Light Curve Shape")
+            for band in self.bands:
+                print("band "+band+": "+str(lightcurves[band].shape))
 
             for band in self.bands:
                 lightcurves[band] = lightcurves[band][shuffled_index, ...]

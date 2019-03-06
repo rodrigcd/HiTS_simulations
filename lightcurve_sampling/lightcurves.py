@@ -43,8 +43,16 @@ class Asteroids(LightCurve):
                 continue
             time_samples[band] = np.random.randint(low=0, high=len(obs_days[band]), size=(n_lightcurves,))
             lightcurves[band] = np.ones(shape=(n_lightcurves, len(obs_days[band])))*40.0
-            lightcurves[band][np.arange(0, n_lightcurves), time_samples[band]] = mag_samples[band]
+            #lightcurves[band][np.arange(0, n_lightcurves), time_samples[band]] = mag_samples[band]
             mag_samples[band] = mag_samples[band].tolist()
+        for i in range(n_lightcurves):
+            while True:
+                random_band = np.random.choice(self.bands)
+                if len(obs_days[random_band]) > 0:
+                    time_sample = np.random.randint(low=0, high=len(obs_days[random_band]))
+                    #print(lightcurves[band], mag_samples[random_band])
+                    lightcurves[random_band][i, time_sample] = mag_samples[random_band][i]
+                    break
         return lightcurves, mag_samples
 
 
@@ -56,6 +64,9 @@ class NonVariable(LightCurve):
     def generate_lightcurves(self, n_lightcurves, obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        elif len(obs_days)==0:
+            return [array([]) for i in range(n_lightcurves)]
+
         if distr_limits:
             self.mag_generator.set_extrapolation_limits(distr_limits)
         lightcurves = {}
@@ -97,6 +108,9 @@ class RRLyrae(LightCurve):
     def generate_lightcurves(self, n_lightcurves, re_sampled=True, obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        elif len(obs_days)==0:
+            return [array([]) for i in range(n_lightcurves)]
+
         if distr_limits:
             self.mag_generator.set_extrapolation_limits(distr_limits)
         lightcurves = {}
@@ -129,6 +143,9 @@ class EmptyLightCurve(LightCurve):
     def generate_lightcurves(self, n_lightcurves, obs_days=None, distr_limits=None):
         if not obs_days:
             obs_days = self.observation_days
+        elif len(obs_days)==0:
+            return [array([]) for i in range(n_lightcurves)]
+
         if distr_limits:
             self.mag_generator.set_extrapolation_limits(distr_limits)
         params = {}

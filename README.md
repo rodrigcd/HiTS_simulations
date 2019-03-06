@@ -48,7 +48,7 @@ camera_obs_cond["obs_conditions"]["Field01"][0] = {'airmass': 1.6,
   						   'filter': 'r',
   						   'limmag3': 23.8178227406003, #[magnitude]
   						   'limmag5': 23.26320086655941, 
-  						   'obs_days': 57070.03919157, 
+  						   'obs_day': 57070.03919157, 
   						   'seeing': 1.8900000000000001, #[pixels]
   						   'sky_brightness': 279.6861572265625, #[ADU]
   						   'zero_point': 25.396389422104413}

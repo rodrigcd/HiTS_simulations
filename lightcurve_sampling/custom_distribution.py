@@ -67,7 +67,7 @@ class MagnitudeDistribution(object):
             pickle.dump(self.coef_per_band, f)
 
     def load_coef(self):
-        self.coef_per_band = np.load("../lc_data/distr_coef.pkl")
+        self.coef_per_band = np.load("lc_data/distr_coef.pkl")
 
     def set_extrapolation_limits(self, limits):
         self.extrapolation_limit = limits
@@ -104,12 +104,14 @@ class MagnitudeDistribution(object):
         #    samples[band] = np.sort(np.array(samples[band]))
         #shuffled_index = np.arange(0, len(samples[self.bands[0]]), step=1)
         #np.random.shuffle(shuffled_index)
-        #for band in self.bands:
-        #    samples[band] = samples[band][shuffled_index]
+        for band in self.bands:
+            samples[band] = np.array(samples[band])
         return samples
 
     def reject_by_erf(self, magnitude, band):
         p = (1 - erf(magnitude - self.erg_limit[band])) / 2.0
+        if np.isnan(p):
+            p = 0.01
         coin = np.random.binomial(1, p)
         return bool(coin)
 
