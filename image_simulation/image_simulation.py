@@ -55,7 +55,7 @@ class ImageDatabase(object):
                                           galaxies_distr_path=self.galaxies_distr_path,
                                           bands=self.bands,
                                           sky_clipping=self.sky_clipping,
-                                          ccd_parameters=self.camera_params["CCD25"],
+                                          ccd_parameters=self.camera_params[list(self.camera_params.keys())[0]],
                                           real_psfs=True,
                                           obs_cond_path=self.camera_and_obs_cond_path,
                                           augmented_psfs=self.augmented_psfs)
@@ -193,7 +193,11 @@ class ImageDatabase(object):
                 band_group = obs_group.create_group(name=key2)
                 if key2 == "filter":
                     continue
+                if key2 == "limmag3":
+                    continue
                 for band in self.bands:
+                    #print(field, key2, band)
+                    #print(self.obs_cond[field][key2][band])
                     band_group.create_dataset(name=band,
                                               data=self.obs_cond[field][key2][band])
                     if key2 == "seeing":
@@ -288,6 +292,7 @@ class ImageDatabase(object):
                                                                                       with_galaxy=with_galaxy)
 
                     for band in self.bands:
+                        # print(image[band])
                         image_chunk[band].append(image[band])
                         galaxy_image_chunk[band].append(gal_image[band])
                         psf_chunk[band].append(psf[band])
@@ -296,8 +301,7 @@ class ImageDatabase(object):
                     current_mag_lc = self.data[field]["lightcurves"][band][n_saved_lightcurves:upper_index, :]
                     current_lc = self.c_lightcurves[field][band][n_saved_lightcurves:upper_index, :]
                     image_chunk[band] = np.stack(image_chunk[band])
-                    if i_band == 0:
-                        print("image sequence shape for band "+band+": "+str(image_chunk[band].shape))
+                    print("image sequence shape for band "+band+": "+str(image_chunk[band].shape))
                     galaxy_image_chunk[band] = np.stack(galaxy_image_chunk[band])
                     psf_chunk[band] = np.stack(psf_chunk[band])
                     image_dset[band][n_saved_lightcurves:upper_index, :, :, :] = image_chunk[band]

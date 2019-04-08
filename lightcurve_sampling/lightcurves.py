@@ -39,7 +39,7 @@ class Asteroids(LightCurve):
         for i, band in enumerate(self.bands):
             if len(obs_days[band]) == 0:
                 mag_samples[band] = []
-                lightcurves[band] = np.array([])
+                lightcurves[band] = np.empty((10,0))
                 continue
             time_samples[band] = np.random.randint(low=0, high=len(obs_days[band]), size=(n_lightcurves,))
             lightcurves[band] = np.ones(shape=(n_lightcurves, len(obs_days[band])))*40.0

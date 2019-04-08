@@ -58,11 +58,11 @@ n_per_class_per_field = 10
 n_std_limmag = 0.7  # How deep you want to sample the magnitudes
 file_name = file_name + str(n_per_class_per_field)
 
-magnitude_upper_limit = 14.5
+magnitude_upper_limit = 10
 #magnitude_lower_limit = {"RRLyrae": 22.7, "M33Cepheids": 23.5}
 magnitude_lower_limit = {}
-standard_erf_limit = {"g": 22.8}
-custom_erf_limit = {"RRLyrae": {"g": 21.5}}
+standard_erf_limit = {"g": 20.5, "r":20-0.5}
+custom_erf_limit = {}#{"RRLyrae": {"g": 21.5}}
 
 # Don't worry about this
 camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions.pkl"

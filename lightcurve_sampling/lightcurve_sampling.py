@@ -77,13 +77,13 @@ class LightCurveDatabase(object):
         """Magnitude limits should be initialized with values per band"""
         unique_labels, labels_counts = np.unique(self.requested_lightcurves_labels,
                                                  return_counts=True)
-
+        skipped_for_empty_band = 0
         hdf5_file = h5py.File(self.save_path + self.file_name + ".hdf5", "w")
         field_parameters = {}
         for i_field, field in enumerate(self.field_list):
+            #if field == "Field16":
+            #    continue
             print("Simulating for field "+field)
-
-            field_group = hdf5_file.create_group(field)
 
             obs_cond = self.camera_and_obs_cond["obs_conditions"][field]
             obs_days = {"g": [], "r": [], "i": []}
@@ -96,8 +96,11 @@ class LightCurveDatabase(object):
                 limmag[epoch["filter"]].append(epoch["limmag5"])
                 zero_point[epoch["filter"]].append(epoch["zero_point"])
 
+            skip_field = False
             for band in self.bands:
                 obs_days[band] = np.array(obs_days[band])
+                if len(obs_days[band])==0:
+                    skip_field = True
                 limmag[band] = np.array(limmag[band])
                 zero_point[band] = np.array(zero_point[band])
                 ordered_index = np.argsort(obs_days[band])
@@ -105,6 +108,12 @@ class LightCurveDatabase(object):
                 limmag[band] = limmag[band][ordered_index]
                 zero_point[band] = zero_point[band][ordered_index]
                 extrapolation_limits[band] = [self.mag_upper_limit, np.mean(limmag[band]) + np.std(limmag[band])*self.n_std_limmag]
+
+            if skip_field:
+                skipped_for_empty_band += 1
+                continue
+
+            field_group = hdf5_file.create_group(field)
 
             lightcurves_list = []
             parameters_list = []
@@ -127,6 +136,14 @@ class LightCurveDatabase(object):
                 n_same_label = labels_counts[unique_labels == self.requested_lightcurves_labels[i]]
                 n_lc = int(np.round(np.true_divide(n_lightcurves_per_class_per_field, n_same_label)))
                 if class_name in ["TypeISupernovae", "TypeIISupernovae", "Supernovae"] :
+                    """################################################################################"""
+                    """MANUAL EXTRAPOLATION LIMIT FOR ZTF, PLEASE FIX THIS LATER AND ADD IT AS ARGUMENT"""
+                    """################################################################################"""
+                    shift_limit = -2
+                    extrapolation_limits = {"g": [self.mag_upper_limit, 25.322089154033994 + shift_limit], # 25.602089154033994
+                                            "r": [self.mag_upper_limit, 25.029324900291915 + shift_limit],
+                                            "i": [self.mag_upper_limit, 24.45150161567846 + shift_limit],
+                                            "z": [self.mag_upper_limit, 23.122699702058064 + shift_limit]}
                     lc, params = lightcurve_obj.generate_lightcurves(n_lightcurves=n_lc,
                                                                      obs_days=obs_days,
                                                                      distr_limits=extrapolation_limits,
@@ -163,6 +180,7 @@ class LightCurveDatabase(object):
                     lightcurves[band].append(lc[band])
                     parameters[band] += parameters_list[i][band]
                     # print(lightcurves[band][-1].shape)
+                #print(lightcurves[band])
                 lightcurves[band] = np.concatenate(lightcurves[band], axis=0)
                 #parameters[band] = np.array(parameters[band])
             # print(parameters["g"])
@@ -226,6 +244,8 @@ class LightCurveDatabase(object):
 
         print("Total number of lightcurves per class: "+str(len(self.field_list)*n_lightcurves_per_class_per_field))
         print("Total number of lightcurves: "+str(len(self.field_list)*n_lightcurves_per_class_per_field*len(self.requested_lightcurves)))
+
+        print("Skipped fields", skipped_for_empty_band)
 
         pickle.dump(field_parameters,
                     open(self.save_path + self.file_name + ".pkl", "wb"),

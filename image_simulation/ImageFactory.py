@@ -71,7 +71,11 @@ class ImageFactory:
         # print("counts: "+ str(counts))
         # print("integral of psf: " + str(np.sum(data)))
         # estimated_sky_counts = 4*np.pi*(sigma**2)*sky_counts
+        #print(np.amin([sky_counts, self.sky_clipping]))
         data += np.round(np.amin([sky_counts, self.sky_clipping]))
+        #plt.imshow(data)
+        #plt.colorbar()
+        #plt.show()
         # adding galaxy
         if self.with_galaxy:
             if self.real_psfs:
