@@ -7,6 +7,7 @@ import astropy.modeling.models as models
 import itertools
 import matplotlib.pyplot as plt
 
+
 class ImagePhotometry(object):
 
     def __init__(self, **kwargs):
@@ -21,13 +22,12 @@ class ImagePhotometry(object):
         self.fields = list(self.image_data.keys())
 
         self.cam_params = np.load(self.obs_condition_path)["camera_params"]
-        self.gruops_to_copy = ['count_lightcurves', 'galaxy_flag', 'ids',
+        self.groups_to_copy = ['count_lightcurves', 'galaxy_flag', 'ids',
                                'labels','lc_type', 'lightcurves', 'obs_cond']
 
 
         self.average_camera_params()
         #self.estimate_sky_from_images()
-
 
     def get_lightcurve(self, image_seq, gal_seq, psf, mask, sky, sky_variance, good_quality_points=None):
         """
@@ -46,7 +46,8 @@ class ImagePhotometry(object):
         clean_source_values = []
         residuals = np.zeros(shape=(21, 21, len(sky)))
         clean_image = image_seq - gal_seq - sky
-        valid_time_index = np.where(good_quality_points==True)[0]
+        valid_time_index = np.where(good_quality_points==True)[0][:len(sky_variance)]
+        #print(valid_time_index)
 
         for time_index in valid_time_index:
             current_source_image = clean_image[:, :, time_index]
@@ -111,7 +112,7 @@ class ImagePhotometry(object):
             aperture_radius_list.append(aperture_radius)
         return np.stack(aperture_mask_list, axis=2), aperture_radius_list
 
-    def run_photometry(self, output_filename, band="g"):
+    def run_photometry(self, output_filename):
         start = time.time()
         output_file = h5py.File(self.save_path + output_filename + ".hdf5", "w")
         for field in self.fields:
@@ -127,45 +128,51 @@ class ImagePhotometry(object):
             error_gruop = image_field_group.create_group("estimated_error_counts")
 
             image_field_data = self.image_data[field]
-            for group_name in self.gruops_to_copy:
+            for group_name in self.groups_to_copy:
                 image_field_data.copy(group_name, field_group)
-                
-            # Data for photometry
-            images = image_field_data["images"][band][:]
-            gal_images = image_field_data["galaxy_image"][band][:]
-            psf_image = image_field_data["psf_image"][band][:]
-            good_quality_points = image_field_data["obs_cond"]["good_quality_points"][band][:]
-            sky_field, var_field = self.estimate_sky_from_images(field, n_images=300)
-            sky_field = image_field_data["obs_cond"]["sky_brightness"][band][:]
-            mask, _ = self.get_apperture_mask(field_group["obs_cond"]["seeing"][band][:])
-            #print("images: "+str(images.shape))
-            #print("gal: "+str(gal_images.shape))n
-            #print("psf: "+str(psf_image.shape))
-            #print(sky_field.shape, var_field.shape)
-            #print(mask.shape)
-            # yostart = time.time()
 
-            estimated_lc = []
-            estimated_variance = []
-            residuals = []
-            for i_image in range(images.shape[0]):
-                est_lc, est_var, res, source_image = self.get_lightcurve(image_seq=images[i_image, ...],
-                                                                         gal_seq=gal_images[i_image, ...],
-                                                                         psf=psf_image[i_image, ...],
-                                                                         mask=mask,
-                                                                         sky=sky_field,
-                                                                         sky_variance=var_field)
-                estimated_lc.append(est_lc)
-                estimated_variance.append(est_var)
-                residuals.append(res)
-            estimated_lc = np.stack(estimated_lc, axis=0)
-            estimated_variance = np.stack(estimated_variance, axis=0)
-            residuals = np.stack(residuals, axis=0)
-            field_group.create_dataset("estimated_count_lc", data=estimated_lc)
-            field_group.create_dataset("estimated_count_variance", data=estimated_variance)
-            count_group.create_dataset(band, data=estimated_lc)
-            error_gruop.create_dataset(band, data=estimated_variance)
-            # field_group.create_dataset("residuals", data=residuals)
+            fg_lc = field_group.create_group("estimated_count_lc")
+            fg_var = field_group.create_group("estimated_count_variance")
+
+            for band in self.bands:
+                # Data for photometry
+                images = image_field_data["images"][band][:]
+                gal_images = image_field_data["galaxy_image"][band][:]
+                psf_image = image_field_data["psf_image"][band][:]
+                good_quality_points = image_field_data["obs_cond"]["good_quality_points"][band][:]
+                sky_field, var_field = self.estimate_sky_from_images(field, n_images=20)
+                sky_field = image_field_data["obs_cond"]["sky_brightness"][band][:]
+                mask, _ = self.get_apperture_mask(field_group["obs_cond"]["seeing"][band][:])
+                #print("images: "+str(images.shape))
+                #print("gal: "+str(gal_images.shape))n
+                #print("psf: "+str(psf_image.shape))
+                #print(sky_field.shape, var_field.shape)
+                #print(mask.shape)
+                # yostart = time.time()
+
+                estimated_lc = []
+                estimated_variance = []
+                residuals = []
+                for i_image in range(images.shape[0]):
+                    est_lc, est_var, res, source_image = self.get_lightcurve(image_seq=images[i_image, ...],
+                                                                             gal_seq=gal_images[i_image, ...],
+                                                                             psf=psf_image[i_image, ...],
+                                                                             mask=mask,
+                                                                             sky=sky_field,
+                                                                             sky_variance=var_field,
+                                                                             good_quality_points=None)
+                    estimated_lc.append(est_lc)
+                    estimated_variance.append(est_var)
+                    residuals.append(res)
+                estimated_lc = np.stack(estimated_lc, axis=0)
+                estimated_variance = np.stack(estimated_variance, axis=0)
+                residuals = np.stack(residuals, axis=0)
+                fg_lc.create_dataset(band, data=estimated_lc)
+                fg_var.create_dataset(band, data=estimated_variance)
+                count_group.create_dataset(band, data=estimated_lc)
+                error_gruop.create_dataset(band, data=estimated_variance)
+                # field_group.create_dataset("residuals", data=residuals)
+
         end = time.time()
         print(file_name + " done in " + str(np.round(end-start, decimals=2)) + " sec")
         return
@@ -189,17 +196,21 @@ class ImagePhotometry(object):
                 print(str(np.sum(good_quality_points)) + " points after filtering")
                 point_quality_gruop.create_dataset(name=band, data=good_quality_points)
 
+
 if __name__ == "__main__":
-    image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_aug22_moredet2500.hdf5"
+    image_path = "/home/rcarrasco/simulated_data/image_sequences/ztf_positive_psf_ztf_positive_psf10.hdf5"
+    #image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_aug22_moredet2500.hdf5"
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/psf_aug_july27_erf_distr2500.hdf5"
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_june8_erf_distr2500.hdf5"
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/small_may30_erf_distr50.hdf5"
  
-    camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
+    #camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
+    camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v4.pkl"
+
     save_path = "/home/rcarrasco/simulated_data/image_sequences/lightcurves_from_images/"
-    file_name = "more_detections"
+    file_name = "ztf_pos_psf"
     file_name = image_path.split("/")[-1].split(".")[0] + file_name
-    bands = ["g",]
+    bands = ["g", "r"]
     chunk_size = 100
     times_seeing = 2.0*(1/(2*np.sqrt(2*np.log(2)))) # This is 2 sigma
 
@@ -210,7 +221,7 @@ if __name__ == "__main__":
                                  chunk_size=chunk_size,
                                  times_seeing=times_seeing)
 
-    filter_by_conditions = {"seeing": {"g": [0, 2.0 / 0.27]}}  # fitler obs condition by range (seeing in pixels)
+    #filter_by_conditions = {"seeing": {"g": [0, 2.0 / 0.27]}}  # fitler obs condition by range (seeing in pixels)
 
-    photometry.run_photometry(output_filename=file_name, band="g")
+    photometry.run_photometry(output_filename=file_name)
     # photometry.filter_by_conditions(output_filename=file_name, condition_limits=filter_by_conditions)
