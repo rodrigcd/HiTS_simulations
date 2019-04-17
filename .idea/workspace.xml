@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/image_simulation/ztf images.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/ztf images.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image_simulation/noisy_lc/data_inspection.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/noisy_lc/data_inspection.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/image_simulation/noisy_lc/data_inspection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="84" column="28" selection-start-line="84" selection-start-column="28" selection-end-line="84" selection-end-column="28" />
+            <state relative-caret-position="368">
+              <caret line="87" column="85" selection-start-line="87" selection-start-column="85" selection-end-line="87" selection-end-column="85" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -42,6 +42,11 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>choice</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -53,11 +58,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="67" />
-    <option name="y" value="-2" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="1987" />
+    <option name="y" value="25" />
     <option name="width" value="1853" />
-    <option name="height" value="1082" />
+    <option name="height" value="1055" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -93,6 +98,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../Harvard/HCGAN" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -176,15 +182,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1555444370524</updated>
-      <workItem from="1555444372725" duration="11271000" />
+      <workItem from="1555444372725" duration="12807000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11271000" />
+    <option name="totallyTimeSpent" value="12807000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="-2" width="1853" height="1082" extended-state="6" />
+    <frame x="1987" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
@@ -193,7 +199,7 @@
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" />
       <window_info anchor="bottom" id="Version Control" weight="0.32937366" />
-      <window_info active="true" anchor="bottom" id="Python Console" visible="true" weight="0.3578174" />
+      <window_info anchor="bottom" id="Python Console" weight="0.36825055" />
       <window_info anchor="bottom" id="Terminal" weight="0.32937366" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -203,7 +209,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="SciView" weight="0.7338129" />
+      <window_info active="true" anchor="right" id="SciView" visible="true" weight="0.7338129" />
       <window_info anchor="right" id="Database" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -227,8 +233,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/image_simulation/noisy_lc/data_inspection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="84" column="28" selection-start-line="84" selection-start-column="28" selection-end-line="84" selection-end-column="28" />
+        <state relative-caret-position="368">
+          <caret line="87" column="85" selection-start-line="87" selection-start-column="85" selection-end-line="87" selection-end-column="85" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

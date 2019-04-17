@@ -78,17 +78,17 @@ def _silent_plot_lc(ax, field_data, lc_idx, plt_marker='o-'):
     magnitude_noisy = get_magnitude(estimated_counts[band][lc_idx], 24.5, 30)
     magnitude_error = get_magnitude_error(estimated_counts[band][lc_idx],
                                           estimated_error_counts[band][lc_idx])
-    print(estimated_counts[band][lc_idx].shape)
-    print(magnitude_error.shape)
-    print(days[band])
-    print(magnitude_noisy.shape)
+    # print(estimated_counts[band][lc_idx].shape)
+    # print(magnitude_error)
+    # print(days[band])
+    # print(magnitude_noisy)
     ax.errorbar(days[band][:], magnitude_noisy, yerr=magnitude_error, fmt='o',
-                label=band)
+                label='%s; lightcurve' % band)
     color = ax.get_lines()[i * 2].get_color()
-    ax.plot(days[band], field_lc[band][lc_idx], plt_marker, label=band,
+    ax.plot(days[band], field_lc[band][lc_idx], plt_marker, label='%s; model' % band,
             color=color)
   ax.legend()
-  ax.set_ylim([21, 15])
+  #ax.set_ylim([21, 15])
   galaxy_flag = field_data["galaxy_flag"][lc_idx]
   lc_type = field_data["lc_type"][lc_idx]
   ax.set_title("%s; galaxy_flag: %i" % (lc_type, galaxy_flag), fontsize=15)
@@ -98,7 +98,7 @@ def _silent_plot_lc(ax, field_data, lc_idx, plt_marker='o-'):
 def _get_field(data, field):
   if field is None:
     fields = list(data.keys())
-    field = fields[int(np.random.choice(np.arange(len(fields)), 1))]
+    field = fields[int(np.random.choice(np.arange(len(fields)), 1, replace=False))]
     return field
   else:
     return field
@@ -108,7 +108,7 @@ def plot_underliying_model(data, field=None, n_to_plot=1):
   field = _get_field(data, field)
   field_data = data[field]
   lc_idxs_to_plot = np.random.choice(
-      np.arange(field_data[lightcurves_key][g_key].shape[0]), n_to_plot)
+      np.arange(field_data[lightcurves_key][g_key].shape[0]), n_to_plot, replace=False)
   for lc_idx in lc_idxs_to_plot:
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(15, 7))
     _silent_plot_underliying(ax, field_data, lc_idx)
@@ -118,8 +118,8 @@ def plot_underliying_model(data, field=None, n_to_plot=1):
 def plot_underliying_and_lc_model(data, field=None, n_to_plot=1):
   field = _get_field(data, field)
   field_data = data[field]
-  lc_idxs_to_plot = [13]#np.random.choice(
-      #np.arange(field_data[lightcurves_key][g_key].shape[0]), n_to_plot)
+  lc_idxs_to_plot = np.random.choice(np.arange(field_data[lightcurves_key][g_key].shape[0]), n_to_plot, replace=False) #[13]
+  print('%s%s' % (field, str(lc_idxs_to_plot)))
   for lc_idx in lc_idxs_to_plot:
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(15, 7))
     _silent_plot_lc(ax, field_data, lc_idx)
@@ -137,5 +137,5 @@ if __name__ == '__main__':
 
   channels = [g_key, r_key]
   counts = f["Field01"]['estimated_counts']['g'][0]
-  #check field04 y
-  plot_underliying_and_lc_model(f, n_to_plot=10, field='Field04')
+  #check field04 y [13
+  plot_underliying_and_lc_model(f, n_to_plot=10)#, field='Field04')
