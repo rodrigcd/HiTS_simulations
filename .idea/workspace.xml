@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_simulation/ztf images.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/ztf images.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb" afterDir="false" />
-    </list>
+    <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,12 +190,12 @@
       <option name="presentableId" value="Default" />
       <updated>1555444370524</updated>
       <workItem from="1555444372725" duration="13478000" />
-      <workItem from="1555530195326" duration="2693000" />
+      <workItem from="1555530195326" duration="3325000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16171000" />
+    <option name="totallyTimeSpent" value="16803000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
