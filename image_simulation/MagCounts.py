@@ -27,6 +27,24 @@ def Mag2Counts(lightcurves, airmass_per_obs=None, t_exp=225.0, zero_point=26.59,
             return c_lightcurves
 
 
+def Mag2Counts_ZTF(lightcurves, airmass_per_obs=None, t_exp=225.0, zero_point=26.59, airmass_term=0.15):
+    c_lightcurves = []
+    for i in range(lightcurves.shape[0]):
+        power = (lightcurves[i, :] - zero_point) / -2.5
+        c_lightcurves.append(np.floor(np.power(10, power))[np.newaxis, ...])
+    c_lightcurves = np.concatenate(c_lightcurves, axis=0)
+    return c_lightcurves
+
+
+def Count2Mag_ZTF(counts, airmass_per_obs=None, t_exp=225.0, zero_point=26.59, airmass_term=0.15):
+    m_lightcurves = []
+    for i in range(counts.shape[0]):
+        m = zero_point - 2.5 * np.log10(np.clip(counts[i, :], a_min=10e-4, a_max=None))
+        m_lightcurves.append(m[np.newaxis, ...])
+    m_lightcurves = np.concatenate(m_lightcurves, axis=0)
+    return m_lightcurves
+
+
 def Count2Mag(counts, airmass_per_obs=None, t_exp=225.0, zero_point=26.59, airmass_term=0.15):
     if not type(counts) is np.ndarray:
         if airmass_per_obs is None:

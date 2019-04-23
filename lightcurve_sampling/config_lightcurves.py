@@ -51,7 +51,7 @@ eb_path = "./lc_data/eb_templates.pkl"
 save_path = "/home/rcarrasco/simulated_data/lightcurves/"
 requested_lightcurve = ["RRLyrae", "M33Cepheids", "EclipsingBinaries", "NonVariable", "EmptyLightCurve", "Asteroids"]
 requested_lightcurve_labels = [0, 1, 2, 3, 4, 5]
-file_name = "ztf_positive_psf"
+file_name = "good_zero_points"
 bands = ["g", "r"]
 
 n_per_class_per_field = 10
@@ -65,7 +65,7 @@ standard_erf_limit = {"g": 20.5, "r":20-0.5}
 custom_erf_limit = {}#{"RRLyrae": {"g": 21.5}}
 
 # Don't worry about this
-camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v4.pkl"
+camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v5.pkl"
 M33_cepheids_path = "./lc_data/cepheid_gps.pkl"
 eb_path = "./lc_data/eb_templates.pkl"
 

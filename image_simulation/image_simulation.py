@@ -3,7 +3,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 import numpy as np
 from ImageFactory import ImageFactory
 import h5py
-from MagCounts import Mag2Counts
+from MagCounts import Mag2Counts_ZTF
 import time
 import random
 import sys
@@ -137,10 +137,10 @@ class ImageDatabase(object):
             self.c_lightcurves[field] = {}
             for band in self.bands:
                 m_lightcurves = self.data[field]["lightcurves"][band][:]
-                self.c_lightcurves[field][band] = Mag2Counts(lightcurves=m_lightcurves,
-                                                             airmass_per_obs=None,
-                                                             t_exp=self.obs_cond[field]["exp_time"][band],
-                                                             zero_point=self.obs_cond[field]["zero_point"][band])
+                self.c_lightcurves[field][band] = Mag2Counts_ZTF(lightcurves=m_lightcurves,
+                                                                 airmass_per_obs=None,
+                                                                 t_exp=self.obs_cond[field]["exp_time"][band],
+                                                                 zero_point=self.obs_cond[field]["zero_point"][band])
                 #print(self.c_lightcurves[field][band].shape)
                 #plt.plot(self.sorted_obs_cond[field]["obs_day"]["g"], self.c_lightcurves[field][band][0,:])
                 #plt.show()

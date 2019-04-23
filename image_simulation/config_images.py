@@ -44,7 +44,7 @@ camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
 save_path = "/home/rcarrasco/simulated_data/image_sequences/"
 galaxy_path = "/home/rcarrasco/simulated_data/galaxies/gal_mags_dev_exp_z_all_Filter_rodrigocd.csv"
 lightcurves_path = "/home/rcarrasco/simulated_data/lightcurves/"
-lightcurve_name = "ztf_positive_psf10"
+lightcurve_name = "good_zero_points10"
 lightcurves_path = lightcurves_path + lightcurve_name
 
 requested_lightcurve = ["RRLyrae", "M33Cepheids", "EclipsingBinaries", "NonVariable", "EmptyLightCurve", "Asteroids"]
@@ -58,11 +58,10 @@ lc_per_chunk = 50
 sky_clipping = 2200
 augmented_psfs = False
 astrometric_error = 0.3
-output_filename = "ztf_positive_psf"
+output_filename = "good_zero_points"
 output_filename = output_filename + "_" + lightcurve_name
 
 filter_by_conditions = {}
                         #"zero_point": {"g": [24.9, 25.15]}}
 
-# Don't worry about this
-camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v4.pkl"
+camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v5.pkl"

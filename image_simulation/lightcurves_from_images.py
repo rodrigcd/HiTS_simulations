@@ -198,17 +198,17 @@ class ImagePhotometry(object):
 
 
 if __name__ == "__main__":
-    image_path = "/home/rcarrasco/simulated_data/image_sequences/ztf_positive_psf_ztf_positive_psf10.hdf5"
+    image_path = "/home/rcarrasco/simulated_data/image_sequences/good_zero_points_good_zero_points10.hdf5"
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_aug22_moredet2500.hdf5"
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/psf_aug_july27_erf_distr2500.hdf5"
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/complete_june8_erf_distr2500.hdf5"
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/small_may30_erf_distr50.hdf5"
  
     #camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
-    camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v4.pkl"
+    camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v5.pkl"
 
     save_path = "/home/rcarrasco/simulated_data/image_sequences/lightcurves_from_images/"
-    file_name = "ztf_pos_psf"
+    file_name = "good_zp"
     file_name = image_path.split("/")[-1].split(".")[0] + file_name
     bands = ["g", "r"]
     chunk_size = 100
