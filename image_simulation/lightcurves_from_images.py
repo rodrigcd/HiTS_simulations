@@ -164,6 +164,7 @@ class ImagePhotometry(object):
                     estimated_lc.append(est_lc)
                     estimated_variance.append(est_var)
                     residuals.append(res)
+                    print('band %s, index %i, image %s; lc %s' % (band, i_image, str(images[i_image, ...].shape), str(est_lc.shape)))
                 estimated_lc = np.stack(estimated_lc, axis=0)
                 estimated_variance = np.stack(estimated_variance, axis=0)
                 residuals = np.stack(residuals, axis=0)
@@ -205,7 +206,7 @@ if __name__ == "__main__":
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/small_may30_erf_distr50.hdf5"
  
     #camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
-    camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v4.pkl"
+    camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v5.pkl"
 
     save_path = "/home/rcarrasco/simulated_data/image_sequences/lightcurves_from_images/"
     file_name = "ztf_pos_psf"
