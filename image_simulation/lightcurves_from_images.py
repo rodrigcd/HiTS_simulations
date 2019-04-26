@@ -140,7 +140,7 @@ class ImagePhotometry(object):
                 gal_images = image_field_data["galaxy_image"][band][:]
                 psf_image = image_field_data["psf_image"][band][:]
                 good_quality_points = image_field_data["obs_cond"]["good_quality_points"][band][:]
-                sky_field, var_field = self.estimate_sky_from_images(field, n_images=20)
+                sky_field, var_field = self.estimate_sky_from_images(field, band, n_images=20)
                 sky_field = image_field_data["obs_cond"]["sky_brightness"][band][:]
                 mask, _ = self.get_apperture_mask(field_group["obs_cond"]["seeing"][band][:])
                 #print("images: "+str(images.shape))
