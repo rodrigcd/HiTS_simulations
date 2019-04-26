@@ -164,6 +164,7 @@ class ImagePhotometry(object):
                     estimated_lc.append(est_lc)
                     estimated_variance.append(est_var)
                     residuals.append(res)
+                    print('band %s, index %i, image %s; lc %s' % (band, i_image, str(images[i_image, ...].shape), str(est_lc.shape)))
                 estimated_lc = np.stack(estimated_lc, axis=0)
                 estimated_variance = np.stack(estimated_variance, axis=0)
                 residuals = np.stack(residuals, axis=0)

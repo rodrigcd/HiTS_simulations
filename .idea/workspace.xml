@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="" />
+    <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,23 +13,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/image_simulation/noisy_lc/data_inspection.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/image_simulation/ztf images.ipynb">
+          <provider selected="true" editor-type-id="jupyter-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb">
+          <provider selected="true" editor-type-id="jupyter-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/image_simulation/config_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-923">
-              <caret line="30" column="32" selection-start-line="30" selection-start-column="32" selection-end-line="30" selection-end-column="32" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="619">
+              <caret line="57" column="19" selection-start-line="57" selection-start-column="19" selection-end-line="57" selection-end-column="19" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/image_simulation/noisy_lc/period_inspection.py">
+        <entry file="file://$PROJECT_DIR$/image_simulation/image_simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="18" column="85" selection-start-line="18" selection-start-column="85" selection-end-line="18" selection-end-column="107" />
+            <state relative-caret-position="424">
+              <caret line="360" selection-start-line="360" selection-end-line="360" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="671">
+              <caret line="166" column="133" selection-start-line="166" selection-start-column="133" selection-end-line="166" selection-end-column="133" />
             </state>
           </provider>
         </entry>
@@ -43,6 +62,9 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>choice</find>
+      <find>load_obs</find>
+      <find>estimated_counts</find>
+      <find>if</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -53,6 +75,7 @@
       <list>
         <option value="$PROJECT_DIR$/image_simulation/noisy_lc/period_inspection.py" />
         <option value="$PROJECT_DIR$/image_simulation/noisy_lc/data_inspection.py" />
+        <option value="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" />
       </list>
     </option>
   </component>
@@ -70,7 +93,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -83,16 +105,11 @@
               <item name="HiTS_simulations" type="462c0819:PsiDirectoryNode" />
               <item name="image_simulation" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="HiTS_simulations" type="b2602c69:ProjectViewProjectNode" />
-              <item name="HiTS_simulations" type="462c0819:PsiDirectoryNode" />
-              <item name="image_simulation" type="462c0819:PsiDirectoryNode" />
-              <item name="noisy_lc" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -195,10 +212,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16803000" />
+    <option name="totallyTimeSpent" value="20002000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1299" height="743" extended-state="6" />
+    <frame x="1987" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.25379092" />
@@ -246,6 +263,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="18" column="85" selection-start-line="18" selection-start-column="85" selection-end-line="18" selection-end-column="107" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/image_simulation/image_simulation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="424">
+          <caret line="360" selection-start-line="360" selection-end-line="360" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/envs/tf/lib/python3.6/site-packages/h5py/_hl/group.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="51" column="8" selection-start-line="51" selection-start-column="8" selection-end-line="51" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/image_simulation/config_images.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="619">
+          <caret line="57" column="19" selection-start-line="57" selection-start-column="19" selection-end-line="57" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="671">
+          <caret line="166" column="133" selection-start-line="166" selection-start-column="133" selection-end-line="166" selection-end-column="133" />
         </state>
       </provider>
     </entry>
