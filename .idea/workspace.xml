@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,8 +43,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="671">
-              <caret line="166" column="133" selection-start-line="166" selection-start-column="133" selection-end-line="166" selection-end-column="133" />
+            <state relative-caret-position="746">
+              <caret line="171" column="82" selection-start-line="171" selection-start-column="82" selection-end-line="171" selection-end-column="82" />
             </state>
           </provider>
         </entry>
@@ -212,7 +211,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20002000" />
+    <option name="totallyTimeSpent" value="20758000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1987" y="25" width="1853" height="1055" extended-state="6" />
@@ -289,8 +288,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="671">
-          <caret line="166" column="133" selection-start-line="166" selection-start-column="133" selection-end-line="166" selection-end-column="133" />
+        <state relative-caret-position="746">
+          <caret line="171" column="82" selection-start-line="171" selection-start-column="82" selection-end-line="171" selection-end-column="82" />
         </state>
       </provider>
     </entry>
