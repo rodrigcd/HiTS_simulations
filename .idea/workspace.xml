@@ -43,8 +43,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="746">
-              <caret line="171" column="82" selection-start-line="171" selection-start-column="82" selection-end-line="171" selection-end-column="82" />
+            <state relative-caret-position="236">
+              <caret line="21" column="50" lean-forward="true" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -64,6 +64,7 @@
       <find>load_obs</find>
       <find>estimated_counts</find>
       <find>if</find>
+      <find>&quot;g&quot;</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -211,7 +212,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20758000" />
+    <option name="totallyTimeSpent" value="21096000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1987" y="25" width="1853" height="1055" extended-state="6" />
@@ -288,8 +289,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="746">
-          <caret line="171" column="82" selection-start-line="171" selection-start-column="82" selection-end-line="171" selection-end-column="82" />
+        <state relative-caret-position="236">
+          <caret line="21" column="50" lean-forward="true" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
         </state>
       </provider>
     </entry>

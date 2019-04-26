@@ -78,17 +78,17 @@ class ImagePhotometry(object):
         self.readout_noise = self.readout_noise/np.float(n_cams)
         self.gain = self.gain/np.float(n_cams)
 
-    def estimate_sky_from_images(self, field, n_images=1000):
+    def estimate_sky_from_images(self, field, band, n_images=1000):
         field_data = self.image_data[field]
         field_images = field_data["images"]
-        sky_from_data = field_data["obs_cond"]["sky_brightness"]["g"][:]
+        sky_from_data = field_data["obs_cond"]["sky_brightness"][band][:]
         estimated_sky_from_images = []
         estimated_std = []
         for time in range(sky_from_data.shape[0]):
             time_sky = 0
             pixel_array = []
             for i in range(n_images):
-                pixel_array.append(field_images["g"][i, :, 0, time])
+                pixel_array.append(field_images[band][i, :, 0, time])
             pixel_array = np.concatenate(pixel_array, axis=0)
             #print(pixel_array.shape)
             time_sky = np.mean(pixel_array)
