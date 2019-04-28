@@ -219,7 +219,8 @@ if __name__ == "__main__":
     file_name = image_path.split("/")[-1].split(".")[0] + file_name
     bands = ["g", "r"]
     chunk_size = 100
-    times_seeing = 2.0*(1/(2*np.sqrt(2*np.log(2)))) # This is 2 sigma
+    sigmas = 5.0
+    times_seeing = sigmas*(1/(2*np.sqrt(2*np.log(2)))) # This is 2 sigma
 
     photometry = ImagePhotometry(images_path=image_path,
                                  obs_cond=camera_and_obs_cond_path,

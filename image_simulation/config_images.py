@@ -64,4 +64,5 @@ output_filename = output_filename + "_" + lightcurve_name
 filter_by_conditions = {}
                         #"zero_point": {"g": [24.9, 25.15]}}
 
+# Don't worry about this
 camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v5.pkl"
