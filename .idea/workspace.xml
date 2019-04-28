@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image_simulation/config_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/config_images.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,8 +26,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/image_simulation/config_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="412">
-              <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
+            <state relative-caret-position="45">
+              <caret line="3" column="5" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -35,8 +35,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/image_simulation/image_simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="397">
-              <caret line="381" column="9" selection-start-line="381" selection-start-column="4" selection-end-line="381" selection-end-column="9" />
+            <state relative-caret-position="177">
+              <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -44,8 +44,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
-              <caret line="166" selection-start-line="166" selection-end-line="172" selection-end-column="110" />
+            <state relative-caret-position="177">
+              <caret line="214" column="82" selection-start-line="214" selection-start-column="82" selection-end-line="214" selection-end-column="82" />
             </state>
           </provider>
         </entry>
@@ -69,6 +69,7 @@
       <find>lc_path</find>
       <find>print</find>
       <find>ztf_positive_psf</find>
+      <find>v5</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -213,15 +214,16 @@
       <updated>1555444370524</updated>
       <workItem from="1555444372725" duration="13478000" />
       <workItem from="1555530195326" duration="3325000" />
-      <workItem from="1556493496914" duration="1282000" />
+      <workItem from="1556493496914" duration="1938000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="22378000" />
+    <option name="totallyTimeSpent" value="23034000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.25379092" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -284,24 +286,24 @@
     <entry file="file://$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb">
       <provider selected="true" editor-type-id="jupyter-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/image_simulation/image_simulation.py">
+    <entry file="file://$PROJECT_DIR$/image_simulation/config_images.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="397">
-          <caret line="381" column="9" selection-start-line="381" selection-start-column="4" selection-end-line="381" selection-end-column="9" />
+        <state relative-caret-position="45">
+          <caret line="3" column="5" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/image_simulation/config_images.py">
+    <entry file="file://$PROJECT_DIR$/image_simulation/image_simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
+        <state relative-caret-position="177">
+          <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="166" selection-start-line="166" selection-end-line="172" selection-end-column="110" />
+        <state relative-caret-position="177">
+          <caret line="214" column="82" selection-start-line="214" selection-start-column="82" selection-end-line="214" selection-end-column="82" />
         </state>
       </provider>
     </entry>

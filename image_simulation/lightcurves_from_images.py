@@ -212,7 +212,7 @@ if __name__ == "__main__":
     #image_path = "/home/rcarrasco/simulated_data/image_sequences/small_may30_erf_distr50.hdf5"
 
     #camera_and_obs_cond_path = "../real_obs/pickles/camera_and_obs_cond.pkl"
-    camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v5.pkl"
+    camera_and_obs_cond_path = "../real_obs/pickles/ztf_conditions_postive_psfs_v6.pkl"
 
     save_path = "/home/rcarrasco/simulated_data/image_sequences/lightcurves_from_images/"
     file_name = "good_zp"
