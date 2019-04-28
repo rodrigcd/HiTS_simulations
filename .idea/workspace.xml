@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="" />
+    <list default="true" id="cfd166d2-d321-4531-b414-5b067f31e34d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,11 +23,11 @@
           <provider selected="true" editor-type-id="jupyter-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/image_simulation/config_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="457">
-              <caret line="67" column="78" selection-start-line="67" selection-start-column="78" selection-end-line="67" selection-end-column="78" />
+            <state relative-caret-position="412">
+              <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -32,17 +35,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/image_simulation/image_simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="366" column="36" selection-start-line="366" selection-start-column="29" selection-end-line="366" selection-end-column="36" />
+            <state relative-caret-position="397">
+              <caret line="381" column="9" selection-start-line="381" selection-start-column="4" selection-end-line="381" selection-end-column="9" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="214" column="87" lean-forward="true" selection-start-line="214" selection-start-column="87" selection-end-line="214" selection-end-column="87" />
+            <state relative-caret-position="262">
+              <caret line="166" selection-start-line="166" selection-end-line="172" selection-end-column="110" />
             </state>
           </provider>
         </entry>
@@ -63,6 +66,9 @@
       <find>estimated_counts</find>
       <find>if</find>
       <find>&quot;g&quot;</find>
+      <find>lc_path</find>
+      <find>print</find>
+      <find>ztf_positive_psf</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -73,6 +79,7 @@
       <list>
         <option value="$PROJECT_DIR$/image_simulation/noisy_lc/period_inspection.py" />
         <option value="$PROJECT_DIR$/image_simulation/noisy_lc/data_inspection.py" />
+        <option value="$PROJECT_DIR$/image_simulation/config_images.py" />
         <option value="$PROJECT_DIR$/image_simulation/lightcurves_from_images.py" />
       </list>
     </option>
@@ -119,7 +126,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -206,16 +213,15 @@
       <updated>1555444370524</updated>
       <workItem from="1555444372725" duration="13478000" />
       <workItem from="1555530195326" duration="3325000" />
-      <workItem from="1556493496914" duration="271000" />
+      <workItem from="1556493496914" duration="1282000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21367000" />
+    <option name="totallyTimeSpent" value="22378000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.25379092" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -278,24 +284,24 @@
     <entry file="file://$PROJECT_DIR$/image_simulation/ztf_images_lc_exploration.ipynb">
       <provider selected="true" editor-type-id="jupyter-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="214" column="87" lean-forward="true" selection-start-line="214" selection-start-column="87" selection-end-line="214" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/image_simulation/image_simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="366" column="36" selection-start-line="366" selection-start-column="29" selection-end-line="366" selection-end-column="36" />
+        <state relative-caret-position="397">
+          <caret line="381" column="9" selection-start-line="381" selection-start-column="4" selection-end-line="381" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/image_simulation/config_images.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="67" column="78" selection-start-line="67" selection-start-column="78" selection-end-line="67" selection-end-column="78" />
+        <state relative-caret-position="412">
+          <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/image_simulation/lightcurves_from_images.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="166" selection-start-line="166" selection-end-line="172" selection-end-column="110" />
         </state>
       </provider>
     </entry>
